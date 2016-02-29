@@ -32,20 +32,20 @@ namespace PacketTrans_ask
         }
 
         //通知类型
-        //private int info_type;
-        //public int Info_type
-        //{
-        //    get { return info_type; }
-        //    set { info_type = value; }
-        //}
+        private int info_type;
+        public int Info_type
+        {
+            get { return info_type; }
+            set { info_type = value; }
+        }
 
         //通知方式
-        //private int net_type;
-        //public int Net_type
-        //{
-        //    get { return net_type; }
-        //    set { net_type = value; }
-        //}
+        private int net_type;
+        public int Net_type
+        {
+            get { return net_type; }
+            set { net_type = value; }
+        }
 
         //商户号
         private string mid;
@@ -164,8 +164,14 @@ namespace PacketTrans_ask
             Order_no = xn.SelectSingleNode("order_no").InnerText;
             Pay_type = xn.SelectSingleNode("pay_type").InnerText;
             Trans_type = xn.SelectSingleNode("trans_type").InnerText;
-            //Info_type = int.Parse(xn.SelectSingleNode("info_type").InnerText);
-            //Net_type = int.Parse(xn.SelectSingleNode("net_type").InnerText);
+            if(xn.SelectSingleNode("info_type")==null)
+            { Info_type =9999; }
+            else
+            { Info_type = int.Parse(xn.SelectSingleNode("info_type").InnerText); }
+            if(xn.SelectSingleNode("net_type")==null)
+            { Net_type = 9999; }
+            else
+            { Net_type = int.Parse(xn.SelectSingleNode("net_type").InnerText); }
             Mid = xn.SelectSingleNode("mid").InnerText;
             Tid = xn.SelectSingleNode("tid").InnerText;
             Cardacc_s = xn.SelectSingleNode("cardacc_s").InnerText;

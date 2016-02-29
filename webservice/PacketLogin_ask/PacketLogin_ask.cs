@@ -9,12 +9,12 @@ namespace PacketLogin_ask
         { }
 
         ///公司id
-        //private string company_id;
-        //public string Company_id
-        //{
-        //    get { return company_id; }
-        //    set { company_id = value; }
-        //}
+        private string company_id;
+        public string Company_id
+        {
+            get { return company_id; }
+            set { company_id = value; }
+        }
 
         ///员工号
         private string delivery_man;
@@ -53,7 +53,10 @@ namespace PacketLogin_ask
 
             if (xn != null)
             {
-                //pla.Company_id = xn.SelectSingleNode("company_id").InnerText;
+                if (xn.SelectSingleNode("company_id") == null)
+                { pla.Company_id = "9999"; }
+                else
+                { pla.Company_id = xn.SelectSingleNode("company_id").InnerText; }                               
                 pla.Delivery_man = xn.SelectSingleNode("delivery_man").InnerText;
                 pla.Passwoed = xn.SelectSingleNode("password").InnerText;
                 pla.Check_value = xn.SelectSingleNode("check_value").InnerText;
@@ -64,7 +67,7 @@ namespace PacketLogin_ask
             }
             if (pla.Check_value != null && pla.Check_value != "") //判断效验值,待补充
             {
-                str_mysql = "select count(username) as coutnum from user_info where username='" + pla.Delivery_man + "' and password='" + pla.Passwoed + "'";
+                str_mysql = "select count(skf21) as coutnum from skt3 where skf21='" + pla.Delivery_man + "' and skf194='" + pla.Passwoed + "'";
                 DS = MySqlHelper.MySqlHelper.Query(str_mysql, LinkString);
                 if (DS.Tables[0].Rows[0].ItemArray[0].ToString() != null && int.Parse(DS.Tables[0].Rows[0].ItemArray[0].ToString()) > 0)
                 {

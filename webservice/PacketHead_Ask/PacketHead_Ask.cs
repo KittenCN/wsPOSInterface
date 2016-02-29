@@ -50,12 +50,12 @@ namespace PacketHead_Ask
         }
 
         ///物流终端号
-        //private string terminal_id;
-        //public string Terminal_id
-        //{
-        //    get { return terminal_id; }
-        //    set { terminal_id = value; }
-        //}
+        private string terminal_id;
+        public string Terminal_id
+        {
+            get { return terminal_id; }
+            set { terminal_id = value; }
+        }
 
         ///系统流水号YYMMDD+(00000000-99999999)
         private string system_serial;
@@ -91,7 +91,10 @@ namespace PacketHead_Ask
                 Target = xn.SelectSingleNode("target").InnerText;
                 Request_time = xn.SelectSingleNode("request_time").InnerText;
                 Terminal_eqno = xn.SelectSingleNode("terminal_eqno").InnerText;
-                //Terminal_id = xn.SelectSingleNode("terminal_id").InnerText;
+                if(xn.SelectSingleNode("terminal_id")==null)
+                { Terminal_id = "9999"; }
+                else
+                { Terminal_id = xn.SelectSingleNode("terminal_id").InnerText; }
                 System_serial = xn.SelectSingleNode("system_serial").InnerText;
                 Version = xn.SelectSingleNode("version").InnerText;
                 Ext_attributes = xn.SelectSingleNode("ext_attributes").InnerText;

@@ -45,7 +45,7 @@ namespace WebService
     //接口主体
     public class POSinterface : System.Web.Services.WebService
     {
-        string LinkString = "Server=localhost;user id=root;password=;Database=wxtest;Port=3308;charset=utf8;";
+        string LinkString = "Server=localhost;user id=root;password=;Database=chenkuserdb37;Port=3308;charset=utf8;";
         string STDHead = "<?xml version=\"1.0\" encoding=\"utf-8\"?><Transaction>";
         string STDFoot = "</Transaction>";
         string PacketHead_Error = "<Transaction_Header><check_value>9197F7C3A6A0C84DD2CEA55CFE7CE9CE</check_value><requester>1111111111</requester><resp_code>11</resp_code><resp_msg>系统失败</resp_msg><system_serial>130306000674</system_serial><target>301310070118940</target><terminal_eqno>00000000</terminal_eqno><terminal_id>37677018</terminal_id><transaction_id>SAD001</transaction_id></Transaction_Header>";
@@ -61,7 +61,7 @@ namespace WebService
             
             if (GenClass.GenClass.CheckXML(in_string))
             {
-                string SqlString = "insert into ori_in_string(ori_in_string,create_datetime) select '" + in_string + "',now() ";
+                string SqlString = "insert into skt13(skf151,skf152) select '" + in_string + "',now() ";
                 SqlResult = MySqlHelper.MySqlHelper.ExecuteSql(SqlString, LinkString);
 
                 XmlDocument xmlDoc = new XmlDocument();
@@ -122,34 +122,34 @@ namespace WebService
                     
                         //订单合并信息查询,待完成
                         case "TRANS003":
-                            XmlNode xn_order = xmlDoc.SelectSingleNode("Transaction/Transaction_Body");
-                            if(xn_order!=null)
-                            {
-                                if(xn_order.SelectSingleNode("check_value").InnerText!=null && xn_order.SelectSingleNode("check_value").InnerText !="") //判断效验值,待补充
-                                {
-                                    PacketOrder_ask.PacketOrder_ask poas = new PacketOrder_ask.PacketOrder_ask();
+                            //XmlNode xn_order = xmlDoc.SelectSingleNode("Transaction/Transaction_Body");
+                            //if(xn_order!=null)
+                            //{
+                            //    if(xn_order.SelectSingleNode("check_value").InnerText!=null && xn_order.SelectSingleNode("check_value").InnerText !="") //判断效验值,待补充
+                            //    {
+                            //        PacketOrder_ask.PacketOrder_ask poas = new PacketOrder_ask.PacketOrder_ask();
 
-                                    poas.Trans_type = xn_order.SelectSingleNode("trans_type").InnerText;
-                                    switch (poas.Trans_type)
-                                    {
-                                        case "01"://查询
-                                            string str_mysql = "";
-                                            DataSet DS;
-                                            int int_sqlresult = 0;
+                            //        poas.Trans_type = xn_order.SelectSingleNode("trans_type").InnerText;
+                            //        switch (poas.Trans_type)
+                            //        {
+                            //            case "01"://查询
+                            //                string str_mysql = "";
+                            //                DataSet DS;
+                            //                int int_sqlresult = 0;
 
-                                            poas.Order_count = int.Parse(xn_order.SelectSingleNode("order_count").InnerText);
-                                            poas.Order_set = xn_order.SelectSingleNode("order_set").InnerText;
+                            //                poas.Order_count = int.Parse(xn_order.SelectSingleNode("order_count").InnerText);
+                            //                poas.Order_set = xn_order.SelectSingleNode("order_set").InnerText;
 
-                                            str_mysql = "select order_no,pay_amt from order_info where order_no in (" + poas.Order_set + ")";
-                                            DS = MySqlHelper.MySqlHelper.Query(str_mysql, LinkString);
-                                            int_sqlresult = DS.Tables[0].Rows.Count;
+                            //                str_mysql = "select order_no,pay_amt from order_info where order_no in (" + poas.Order_set + ")";
+                            //                DS = MySqlHelper.MySqlHelper.Query(str_mysql, LinkString);
+                            //                int_sqlresult = DS.Tables[0].Rows.Count;
 
-                                            break;
-                                        case "02"://揽件
-                                            break;                                
-                                    }
-                                }
-                            }
+                            //                break;
+                            //            case "02"://揽件
+                            //                break;                                
+                            //        }
+                            //    }
+                            //}
                             break;
                     
                         //消费通知
@@ -165,12 +165,12 @@ namespace WebService
 
                                     ptas.ReadXML(xn_trans004);
 
-                                    string test_str_mysql = "select * from order_info where order_no='" + ptas.Order_no + "'";
+                                    string test_str_mysql = "select * from skt14 where skf158='" + ptas.Order_no + "'";
                                     DataSet test_DS;
                                     test_DS = MySqlHelper.MySqlHelper.Query(test_str_mysql, LinkString);
                                     if (test_DS.Tables[0].Rows.Count == 0)
                                     {
-                                        str_mysql = "insert into order_info(order_no,pay_type,trans_type,info_type,net_type,`mid`,tid,cardacc_s,amount,pay_amt,discount,pos_serial,pos_setbat,hostserial,authcode,transtime,check_value,cardnum,cardpass) ";
+                                        str_mysql = "insert into skt14(skf158,skf159,skf160,skf161,skf162,skf163,skf164,skf165,skf166,skf167,skf168,skf169,skf170,skf171,skf172,skf173,skf174,skf197,skf198) ";
                                         str_mysql = str_mysql + " value('" + ptas.Order_no + "','" + ptas.Pay_type + "','" + ptas.Trans_type + "'," + "";
                                         str_mysql = str_mysql + "," + "" + ",'" + ptas.Mid + "','" + ptas.Tid + "','" + ptas.Cardacc_s + "'," + ptas.Amount;
                                         str_mysql = str_mysql + "," + ptas.Pay_amt + "," + ptas.Discount + ",'" + ptas.Pos_serial + "','" + ptas.Pos_setbat;
@@ -249,12 +249,12 @@ namespace WebService
 
                                     ptas.ReadXML(xn_trans005);
 
-                                    string test_str_mysql = "select * from order_info where order_no='" + ptas.Order_no + "'";
+                                    string test_str_mysql = "select * from skt14 where skf158='" + ptas.Order_no + "'";
                                     DataSet test_DS;
                                     test_DS = MySqlHelper.MySqlHelper.Query(test_str_mysql, LinkString);
                                     if (test_DS.Tables[0].Rows.Count == 0)
                                     {
-                                        str_mysql = "insert into order_info(order_no,pay_type,trans_type,info_type,net_type,`mid`,tid,cardacc_s,amount,pay_amt,discount,pos_serial,pos_setbat,hostserial,authcode,transtime,check_value,cardnum,cardpass) ";
+                                        str_mysql = "insert into skt14(skf158,skf159,skf160,skf161,skf162,skf163,skf164,skf165,skf166,skf167,skf168,skf169,skf170,skf171,skf172,skf173,skf174,skf197,skf198) ";
                                         str_mysql = str_mysql + " value('" + ptas.Order_no + "','" + ptas.Pay_type + "','" + ptas.Trans_type + "'," + "";
                                         str_mysql = str_mysql + "," + "" + ",'" + ptas.Mid + "','" + ptas.Tid + "','" + ptas.Cardacc_s + "'," + ptas.Amount;
                                         str_mysql = str_mysql + "," + ptas.Pay_amt + "," + ptas.Discount + ",'" + ptas.Pos_serial + "','" + ptas.Pos_setbat;

@@ -9,12 +9,12 @@ namespace PacketLogin_answer
         { }
 
         ///公司id
-        //private string company_id;
-        //public string Company_id
-        //{
-        //    get { return company_id; }
-        //    set { company_id = value; }
-        //}
+        private string company_id;
+        public string Company_id
+        {
+            get { return company_id; }
+            set { company_id = value; }
+        }
 
         ///员工号
         private string delivery_man;
@@ -25,20 +25,20 @@ namespace PacketLogin_answer
         }
 
         /////员工登录密码;32位md5摘要(大写)
-        //private string password;
-        //public string Passwoed
-        //{
-        //    get { return password; }
-        //    set { password = value; }
-        //}
+        private string password;
+        public string Passwoed
+        {
+            get { return password; }
+            set { password = value; }
+        }
 
         ///所属站点信息
-        //private string delivery_info;
-        //public string Delivery_info
-        //{
-        //    get { return delivery_info; }
-        //    set { delivery_info = value; }
-        //}
+        private string delivery_info;
+        public string Delivery_info
+        {
+            get { return delivery_info; }
+            set { delivery_info = value; }
+        }
 
         ///效验数据 md5(request_time+terminal_id+delivery_man+password+signs)
         private string check_value;
@@ -51,8 +51,11 @@ namespace PacketLogin_answer
         public void ReadXML(XmlNode xn, string epwd)
         {
             Delivery_man = xn.SelectSingleNode("delivery_man").InnerText;
-            //Company_id = xn.SelectSingleNode("company_id").InnerText;
-            //Delivery_info = "测试站点";
+            if(xn.SelectSingleNode("company_id")==null)
+            { Company_id = "9999"; }
+            else
+            { Company_id = xn.SelectSingleNode("company_id").InnerText; }           
+            Delivery_info = "测试站点";
             MD5 md5Hash = MD5.Create();
             Check_value = GenClass.GenClass.GetMd5Hash(md5Hash, epwd);
         }

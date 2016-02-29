@@ -48,12 +48,12 @@ namespace PacketHead_Answer
         }
 
         ///物流终端号
-        //private string terminal_id;
-        //public string Terminal_id
-        //{
-        //    get { return terminal_id; }
-        //    set { terminal_id = value; }
-        //}
+        private string terminal_id;
+        public string Terminal_id
+        {
+            get { return terminal_id; }
+            set { terminal_id = value; }
+        }
 
         ///系统流水号YYMMDD+(00000000-99999999)
         private string system_serial;
@@ -80,12 +80,12 @@ namespace PacketHead_Answer
         }
 
         /////版本号
-        //private string version;
-        //public string Version
-        //{
-        //    get { return version; }
-        //    set { version = value; }
-        //}
+        private string version;
+        public string Version
+        {
+            get { return version; }
+            set { version = value; }
+        }
 
         ///自定义字段
         private string ext_attributes;
@@ -104,7 +104,10 @@ namespace PacketHead_Answer
             Request_time = DateTime.Now.ToString("yyyyMMddHHmmss");
             System_serial = phas.System_serial;
             Terminal_eqno = phas.Terminal_eqno;
-            //Terminal_id = phas.Terminal_id;
+            if(phas.Terminal_id==null)
+            { phas.Terminal_id = "9999"; }
+            Terminal_id = phas.Terminal_id;
+
         }
 
         public void Gen_Answer_XML(Boolean bool_success, string in_Rmsg, string in_EXstring)
