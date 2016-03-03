@@ -31,7 +31,7 @@ namespace XMLHelper
             XmlElement request_time = GenClass.GenClass.GetXmlElement(xmlDocnew, "request_time", phan.Request_time);
             XmlElement system_serial = GenClass.GenClass.GetXmlElement(xmlDocnew, "system_serial", phan.System_serial);
             XmlElement terminal_eqno = GenClass.GenClass.GetXmlElement(xmlDocnew, "terminal_eqno", phan.Terminal_eqno);
-            //XmlElement terminal_id = GenClass.GenClass.GetXmlElement(xmlDocnew, "terminal_id", phan.Terminal_id);
+            XmlElement terminal_id = GenClass.GenClass.GetXmlElement(xmlDocnew, "terminal_id", phan.Terminal_id);
             XmlElement resp_code = GenClass.GenClass.GetXmlElement(xmlDocnew, "resp_code", phan.Resp_code);
             XmlElement resp_msg = GenClass.GenClass.GetXmlElement(xmlDocnew, "resp_msg", phan.Resp_msg);
             XmlElement ext_attributes = GenClass.GenClass.GetXmlElement(xmlDocnew, "ext_attributes", phan.Ext_attributes);
@@ -42,7 +42,7 @@ namespace XMLHelper
             Transaction_Header.AppendChild(request_time);
             Transaction_Header.AppendChild(system_serial);
             Transaction_Header.AppendChild(terminal_eqno);
-            //Transaction_Header.AppendChild(terminal_id);
+            Transaction_Header.AppendChild(terminal_id);
             Transaction_Header.AppendChild(resp_code);
             Transaction_Header.AppendChild(resp_msg);
             Transaction_Header.AppendChild(ext_attributes);
@@ -57,13 +57,13 @@ namespace XMLHelper
                         PacketLogin_answer.PacketLogin_answer plan = an as PacketLogin_answer.PacketLogin_answer;
 
                         XmlElement delivery_man = GenClass.GenClass.GetXmlElement(xmlDocnew, "delivery_man", plan.Delivery_man);
-                        //XmlElement company_id = GenClass.GenClass.GetXmlElement(xmlDocnew, "company_id", plan.Company_id);
-                        //XmlElement delivery_info = GenClass.GenClass.GetXmlElement(xmlDocnew, "delivery_info", plan.Delivery_info);
+                        XmlElement company_id = GenClass.GenClass.GetXmlElement(xmlDocnew, "company_id", plan.Company_id);
+                        XmlElement delivery_info = GenClass.GenClass.GetXmlElement(xmlDocnew, "delivery_info", plan.Delivery_info);
                         XmlElement check_value = GenClass.GenClass.GetXmlElement(xmlDocnew, "check_value", plan.Check_value);
 
                         Transaction_Body.AppendChild(delivery_man);
-                        //Transaction_Body.AppendChild(company_id);
-                        //Transaction_Body.AppendChild(delivery_info);
+                        Transaction_Body.AppendChild(company_id);
+                        Transaction_Body.AppendChild(delivery_info);
                         Transaction_Body.AppendChild(check_value);
                         root.AppendChild(Transaction_Body);
 
