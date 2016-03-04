@@ -167,7 +167,7 @@ namespace WebService
                                                     float floOldJF = 0;
                                                     string strOldMoneyid = "0";
 
-                                                    sql = "select * from skt6 where skf91=1 abnd skf64='" + txtUserid + "' ";
+                                                    sql = "select * from skt6 where skf91=1 and skf64='" + txtUserid + "' ";
                                                     ds_sql = MySqlHelper.MySqlHelper.Query(sql, LinkString);
                                                     if (ds_sql.Tables[0].Rows.Count > 0)
                                                     {
@@ -187,7 +187,7 @@ namespace WebService
 
                                                         string strNewMoneyid = "";
                                                         float floNewJF = 0;
-                                                        sql = "select * from skt6 where skf91=1 abnd skf64='" + txtUserid + "' ";
+                                                        sql = "select * from skt6 where skf91=1 and skf64='" + txtUserid + "' ";
                                                         ds_sql = MySqlHelper.MySqlHelper.Query(sql, LinkString);
                                                         if (ds_sql.Tables[0].Rows.Count > 0)
                                                         {
@@ -196,7 +196,7 @@ namespace WebService
                                                         }
 
                                                         //插入历史
-                                                        sql = "insert into skt7(skf73,skf74,skf75,skf78,skf79,skf82,skf199,skf200) value('" + txtUserid + "','" + strOldMoneyid + "','" + strNewMoneyid + "','" + floOldJF + "','" + floNewJF + "','" + System.DateTime.Now.ToString() + "','" + ptas.Order_no + "',1 ";
+                                                        sql = "insert into skt7(skf73,skf74,skf75,skf78,skf79,skf82,skf199,skf200) value('" + txtUserid + "','" + strOldMoneyid + "','" + strNewMoneyid + "','" + floOldJF + "','" + floNewJF + "','" + System.DateTime.Now.ToString() + "','" + ptas.Order_no + "',1) ";
                                                         intds_sql = MySqlHelper.MySqlHelper.ExecuteSql(sql, LinkString);
                                                     }
                                                     else
@@ -321,7 +321,7 @@ namespace WebService
                                                     string strOldMoneyid = "0";
                                                     //string strNewMoneyid = "0";
 
-                                                    sql = "select * from skt6 where skf91=1 abnd skf64='" + txtUserid + "' ";
+                                                    sql = "select * from skt6 where skf91=1 and skf64='" + txtUserid + "' ";
                                                     ds_sql = MySqlHelper.MySqlHelper.Query(sql, LinkString);
                                                     if (ds_sql.Tables[0].Rows.Count > 0)
                                                     {
@@ -348,7 +348,7 @@ namespace WebService
                                                                 str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS005", phan, ptan);
 
                                                                 //插入历史
-                                                                sql = "insert into skt7(skf73,skf74,skf75,skf78,skf79,skf82,skf199,skf200) value('" + txtUserid + "','" + strOldMoneyid + "','" + strOldMoneyid + "','" + floOldJF + "','" + floNewJF + "','" + System.DateTime.Now.ToString() + "','" + ptas.Order_no + "',0 ";
+                                                                sql = "insert into skt7(skf73,skf74,skf75,skf78,skf79,skf82,skf199,skf200) value('" + txtUserid + "','" + strOldMoneyid + "','" + strOldMoneyid + "','" + floOldJF + "','" + floNewJF + "','" + System.DateTime.Now.ToString() + "','" + ptas.Order_no + "',0) ";
                                                                 intds_sql = MySqlHelper.MySqlHelper.ExecuteSql(sql, LinkString);
                                                             }
                                                             else

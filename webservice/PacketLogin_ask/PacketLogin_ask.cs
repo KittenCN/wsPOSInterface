@@ -67,7 +67,7 @@ namespace PacketLogin_ask
             }
             if (pla.Check_value != null && pla.Check_value != "") //判断效验值,待补充
             {
-                str_mysql = "select count(skf21) as coutnum from skt3 where skf21='" + pla.Delivery_man + "' and skf194='" + pla.Passwoed + "'";
+                str_mysql = "select count(skf195) as coutnum from skt8 where skf195='" + pla.Delivery_man + "' and skf196='" + pla.Passwoed + "'";
                 DS = MySqlHelper.MySqlHelper.Query(str_mysql, LinkString);
                 if (DS.Tables[0].Rows[0].ItemArray[0].ToString() != null && int.Parse(DS.Tables[0].Rows[0].ItemArray[0].ToString()) > 0)
                 {
