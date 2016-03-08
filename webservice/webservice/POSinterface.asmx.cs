@@ -2,6 +2,7 @@
 using System.Web.Services.Protocols;
 using System.Data;
 using System.Xml;
+using System.IO;
 
 namespace WebService
 {
@@ -54,6 +55,26 @@ namespace WebService
         [WebMethod(Description = "测试_交易接口_多包统一")]
         public string POS_Interface(string in_string = "")
         {
+            //读取配置文件config.xml
+            if(File.Exists(Server.MapPath("Config.xml")))
+            {
+                try
+                {
+                    XmlDocument xmlCon = new XmlDocument();
+                    xmlCon.Load(Server.MapPath("Config.xml"));
+                    XmlNode xnCon = xmlCon.SelectSingleNode("Config");
+                    LinkString = xnCon.SelectSingleNode("LinkString").InnerText;
+                }
+                catch
+                {
+                    LinkString = "Server=localhost;user id=root;password=;Database=chenkuserdb37;Port=3308;charset=utf8;";
+                }
+            }
+            else
+            {
+                LinkString = "Server=localhost;user id=root;password=;Database=chenkuserdb37;Port=3308;charset=utf8;";
+            }
+
             string str_result = "";
             int SqlResult = 0;
             PacketHead_Ask.PacketHead_Ask phas = new PacketHead_Ask.PacketHead_Ask();
@@ -473,20 +494,20 @@ namespace WebService
             return str_result;
         }
 
-        [WebMethod(Description = "测试_登录")]
-        public bool Login_Interface(string companyid = "", string username = "", string password = "")
-        {
-            string str_mysql = "select count(username) as coutnum from user_info where company_id='" + companyid + "' and username='" + username + "' and password='" + password + "'";
-            DataSet DS = MySqlHelper.MySqlHelper.Query(str_mysql, LinkString);
-            if (DS.Tables[0].Rows[0].ItemArray[0].ToString() != null && int.Parse(DS.Tables[0].Rows[0].ItemArray[0].ToString()) > 0)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
+        //[WebMethod(Description = "测试_登录")]
+        //public bool Login_Interface(string companyid = "", string username = "", string password = "")
+        //{
+        //    string str_mysql = "select count(username) as coutnum from user_info where company_id='" + companyid + "' and username='" + username + "' and password='" + password + "'";
+        //    DataSet DS = MySqlHelper.MySqlHelper.Query(str_mysql, LinkString);
+        //    if (DS.Tables[0].Rows[0].ItemArray[0].ToString() != null && int.Parse(DS.Tables[0].Rows[0].ItemArray[0].ToString()) > 0)
+        //    {
+        //        return true;
+        //    }
+        //    else
+        //    {
+        //        return false;
+        //    }
+        //}
 
         //[WebMethod(Description ="测试_交易接口_单包_登录")]
         //public string POS_Interface_Single_Login(string company_id,string tid,string delivery_man,string password,string check_value)

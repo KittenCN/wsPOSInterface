@@ -75,6 +75,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Config.xml" />
     <Content Include="packages.config" />
     <None Include="Properties\PublishProfiles\wstest2.pubxml" />
     <None Include="Web.Debug.config">
