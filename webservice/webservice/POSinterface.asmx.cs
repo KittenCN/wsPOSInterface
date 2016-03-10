@@ -173,7 +173,15 @@ namespace WebService
 
                                         if (int_result > 0)
                                         {
-                                            string sql = "select * from skt4 where skf54=1 and ((skf38='" + ptas.Cardnum + "' and skf93=1) or (skf39='" + ptas.Cardnum + "' and skf94=1)) and skf95='" + ptas.Cardpass + "' ";
+                                            string sql;
+                                            if(ptas.Pay_type=="03" || ptas.Pay_type=="04")
+                                            {
+                                                sql = "select * from skt4 where skf54=1 and ((skf38='" + ptas.Cardnum + "' and skf93=1) or (skf39='" + ptas.Cardnum + "' and skf94=1)) and skf95='" + ptas.Cardpass + "' ";
+                                            }
+                                            else
+                                            {
+                                                sql = "select * from skt4 where skf54=1 and ((skf38='" + ptas.Cardnum + "' and skf93=1) or (skf39='" + ptas.Cardnum + "' and skf94=1)) ";
+                                            }                                            
                                             DataSet ds_sql = MySqlHelper.MySqlHelper.Query(sql, LinkString);
                                             if (ds_sql.Tables[0].Rows.Count > 0)
                                             {
@@ -195,8 +203,15 @@ namespace WebService
                                                         floOldJF = float.Parse(ds_sql.Tables[0].Rows[0]["skf66"].ToString());
                                                         strOldMoneyid = ds_sql.Tables[0].Rows[0]["skf63"].ToString();
                                                     }
-
-                                                    sql = "update skt6 set skf66=skf66+" + floJF + " where skf91=1 and skf64='" + txtUserid + "' ";
+                                                    if(ptas.Pay_type=="04")
+                                                    {
+                                                        sql = "update skt6 set skf66=skf66-" + floJF + " where skf91=1 and skf64='" + txtUserid + "' ";
+                                                    }
+                                                    else
+                                                    {
+                                                        sql = "update skt6 set skf66=skf66+" + floJF + " where skf91=1 and skf64='" + txtUserid + "' ";
+                                                    }
+                                                    
                                                     int intds_sql = MySqlHelper.MySqlHelper.ExecuteSql(sql, LinkString);
                                                     if (intds_sql > 0)
                                                     {
@@ -327,7 +342,15 @@ namespace WebService
 
                                         if (int_result > 0)
                                         {
-                                            string sql = "select * from skt4 where skf54=1 and ((skf38='" + ptas.Cardnum + "' and skf93=1) or (skf39='" + ptas.Cardnum + "' and skf94=1)) and skf95='" + ptas.Cardpass + "' ";
+                                            string sql;
+                                            if (ptas.Pay_type == "03" || ptas.Pay_type == "04")
+                                            {
+                                                sql = "select * from skt4 where skf54=1 and ((skf38='" + ptas.Cardnum + "' and skf93=1) or (skf39='" + ptas.Cardnum + "' and skf94=1)) and skf95='" + ptas.Cardpass + "' ";
+                                            }
+                                            else
+                                            {
+                                                sql = "select * from skt4 where skf54=1 and ((skf38='" + ptas.Cardnum + "' and skf93=1) or (skf39='" + ptas.Cardnum + "' and skf94=1)) ";
+                                            }
                                             DataSet ds_sql = MySqlHelper.MySqlHelper.Query(sql, LinkString);
                                             if (ds_sql.Tables[0].Rows.Count > 0)
                                             {
