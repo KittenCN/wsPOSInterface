@@ -181,6 +181,9 @@ namespace WebService
                                                 string epwd = phan.Request_time + ptan.Pay_msg;
                                                 ptan.ReadXML(ptan, epwd, "交易成功");
                                                 str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS004", phan, ptan);
+
+                                                sql = "update skt14 set skf201=1 where skf158='" + ptas.Order_no + "' ";
+                                                int intds_sql = MySqlHelper.MySqlHelper.ExecuteSql(sql, LinkString);
                                             }
 
                                             if (ptas.Pay_type=="03")
@@ -229,6 +232,9 @@ namespace WebService
                                                         ptan.ReadXML(ptan, epwd, "交易成功");
                                                         str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS004", phan, ptan);
 
+                                                        sql = "update skt14 set skf201=1 where skf158='" + ptas.Order_no + "' ";
+                                                        intds_sql = MySqlHelper.MySqlHelper.ExecuteSql(sql, LinkString);
+
                                                         string strNewMoneyid = "";
                                                         float floNewJF = 0;
                                                         sql = "select * from skt6 where skf91=1 and skf64='" + txtUserid + "' ";
@@ -252,6 +258,7 @@ namespace WebService
                                                         string epwd = phan.Request_time + ptan.Pay_msg;
                                                         ptan.ReadXML(ptan, epwd, "交易失败,未知错误,联系管理员");
                                                         str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS004", phan, ptan);
+                                                      
                                                     }
 
                                                 }
@@ -398,6 +405,9 @@ namespace WebService
                                                                 string epwd = phan.Request_time + ptan.Pay_msg;
                                                                 ptan.ReadXML(ptan, epwd, "交易成功");
                                                                 str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS005", phan, ptan);
+
+                                                                sql = "update skt14 set skf201=2 where skf158='" + ptas.Order_no + "' ";
+                                                                intds_sql = MySqlHelper.MySqlHelper.ExecuteSql(sql, LinkString);
 
                                                                 //插入历史
                                                                 sql = "insert into skt7(skf73,skf74,skf75,skf78,skf79,skf82,skf199,skf200) value('" + txtUserid + "','" + strOldMoneyid + "','" + strOldMoneyid + "','" + floOldJF + "','" + floNewJF + "','" + System.DateTime.Now.ToString() + "','" + ptas.Order_no + "',0) ";
