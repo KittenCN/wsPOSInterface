@@ -170,18 +170,27 @@ namespace WebService
                                         str_mysql = str_mysql + "','" + ptas.Hostserial + "','" + ptas.Authcode + "','" + ptas.Transtime + "','" + ptas.Check_value + "','" + ptas.Cardnum + "','" + ptas.Cardpass + "')";
 
                                         int int_result = MySqlHelper.MySqlHelper.ExecuteSql(str_mysql, LinkString);
-
+                                        //增加手机号码识别,只能积分
                                         if (int_result > 0)
                                         {
                                             string sql;
-                                            if(ptas.Pay_type=="03" || ptas.Pay_type=="04")
+                                            if ((ptas.Pay_type != "03" || ptas.Pay_type != "04") && ptas.Cardnum == "000000000000")
                                             {
-                                                sql = "select * from skt4 where skf54=1 and ((skf38='" + ptas.Cardnum + "' and skf93=1) or (skf39='" + ptas.Cardnum + "' and skf94=1)) and skf95='" + ptas.Cardpass + "' ";
+                                                phan.Gen_Answer_XML(true, "", "");
+                                                PacketTrans_answer.PacketTrans_answer ptan = new PacketTrans_answer.PacketTrans_answer();
+                                                string epwd = phan.Request_time + ptan.Pay_msg;
+                                                ptan.ReadXML(ptan, epwd, "交易成功");
+                                                str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS004", phan, ptan);
+                                            }
+
+                                            if (ptas.Pay_type=="03")
+                                            {
+                                                sql = "select * from skv1 where ((skvf7='" + ptas.Cardnum + "' and skvf10=1) or (skvf8='" + ptas.Cardnum + "' and skvf11=1) or (skvf20='" + ptas.Cardnum + "')) and skf95='" + ptas.Cardpass + "' ";
                                             }
                                             else
                                             {
-                                                sql = "select * from skt4 where skf54=1 and ((skf38='" + ptas.Cardnum + "' and skf93=1) or (skf39='" + ptas.Cardnum + "' and skf94=1)) ";
-                                            }                                            
+                                                sql = "select * from skv1 where ((skvf7='" + ptas.Cardnum + "' and skvf10=1) or (skvf8='" + ptas.Cardnum + "' and skvf11=1) or (skvf20='" + ptas.Cardnum + "'))) ";
+                                            }
                                             DataSet ds_sql = MySqlHelper.MySqlHelper.Query(sql, LinkString);
                                             if (ds_sql.Tables[0].Rows.Count > 0)
                                             {
@@ -195,7 +204,6 @@ namespace WebService
                                                     float floJF = ptas.Pay_amt * ((float.Parse("100") - floDis) / float.Parse("100"));
                                                     float floOldJF = 0;
                                                     string strOldMoneyid = "0";
-
                                                     sql = "select * from skt6 where skf91=1 and skf64='" + txtUserid + "' ";
                                                     ds_sql = MySqlHelper.MySqlHelper.Query(sql, LinkString);
                                                     if (ds_sql.Tables[0].Rows.Count > 0)
@@ -203,7 +211,7 @@ namespace WebService
                                                         floOldJF = float.Parse(ds_sql.Tables[0].Rows[0]["skf66"].ToString());
                                                         strOldMoneyid = ds_sql.Tables[0].Rows[0]["skf63"].ToString();
                                                     }
-                                                    if(ptas.Pay_type=="04")
+                                                    if(ptas.Pay_type=="03")
                                                     {
                                                         sql = "update skt6 set skf66=skf66-" + floJF + " where skf91=1 and skf64='" + txtUserid + "' ";
                                                     }
@@ -343,13 +351,13 @@ namespace WebService
                                         if (int_result > 0)
                                         {
                                             string sql;
-                                            if (ptas.Pay_type == "03" || ptas.Pay_type == "04")
+                                            if (ptas.Pay_type == "03")
                                             {
-                                                sql = "select * from skt4 where skf54=1 and ((skf38='" + ptas.Cardnum + "' and skf93=1) or (skf39='" + ptas.Cardnum + "' and skf94=1)) and skf95='" + ptas.Cardpass + "' ";
+                                                sql = "select * from skv1 where ((skvf7='" + ptas.Cardnum + "' and skvf10=1) or (skvf8='" + ptas.Cardnum + "' and skvf11=1) or (skvf20='" + ptas.Cardnum + "')) and skf95='" + ptas.Cardpass + "' ";
                                             }
                                             else
                                             {
-                                                sql = "select * from skt4 where skf54=1 and ((skf38='" + ptas.Cardnum + "' and skf93=1) or (skf39='" + ptas.Cardnum + "' and skf94=1)) ";
+                                                sql = "select * from skv1 where ((skvf7='" + ptas.Cardnum + "' and skvf10=1) or (skvf8='" + ptas.Cardnum + "' and skvf11=1) or (skvf20='" + ptas.Cardnum + "'))) ";
                                             }
                                             DataSet ds_sql = MySqlHelper.MySqlHelper.Query(sql, LinkString);
                                             if (ds_sql.Tables[0].Rows.Count > 0)

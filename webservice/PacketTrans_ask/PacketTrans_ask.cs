@@ -185,7 +185,14 @@ namespace PacketTrans_ask
             Transtime = xn.SelectSingleNode("transtime").InnerText;
             Check_value = xn.SelectSingleNode("check_value").InnerText;
             Cardnum = xn.SelectSingleNode("cardnum").InnerText;
-            Cardpass = xn.SelectSingleNode("cardpass").InnerText;
+            if(xn.SelectSingleNode("cardpass")==null)
+            {
+                Cardpass = "000000000";
+            }
+            else
+            {
+                Cardpass = xn.SelectSingleNode("cardpass").InnerText;
+            }
         }
     }
 }
