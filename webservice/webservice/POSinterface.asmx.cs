@@ -174,6 +174,7 @@ namespace WebService
                                         if (int_result > 0)
                                         {
                                             string sql;
+
                                             if ((ptas.Pay_type != "03" || ptas.Pay_type != "04") && ptas.Cardnum == "000000000000")
                                             {
                                                 phan.Gen_Answer_XML(true, "", "");
@@ -185,104 +186,106 @@ namespace WebService
                                                 sql = "update skt14 set skf201=1 where skf158='" + ptas.Order_no + "' ";
                                                 int intds_sql = MySqlHelper.MySqlHelper.ExecuteSql(sql, LinkString);
                                             }
-
-                                            if (ptas.Pay_type=="03")
-                                            {
-                                                sql = "select * from skv1 where ((skvf7='" + ptas.Cardnum + "' and skvf10=1) or (skvf8='" + ptas.Cardnum + "' and skvf11=1) or (skvf20='" + ptas.Cardnum + "')) and skf95='" + ptas.Cardpass + "' ";
-                                            }
                                             else
                                             {
-                                                sql = "select * from skv1 where ((skvf7='" + ptas.Cardnum + "' and skvf10=1) or (skvf8='" + ptas.Cardnum + "' and skvf11=1) or (skvf20='" + ptas.Cardnum + "'))) ";
-                                            }
-                                            DataSet ds_sql = MySqlHelper.MySqlHelper.Query(sql, LinkString);
-                                            if (ds_sql.Tables[0].Rows.Count > 0)
-                                            {
-                                                string txtUserid = ds_sql.Tables[0].Rows[0]["skf36"].ToString();
-
-                                                sql = "select * from skt8 where skf104=1 and skf97='" + ptas.Tid + "' ";
-                                                ds_sql = MySqlHelper.MySqlHelper.Query(sql, LinkString);
+                                                if (ptas.Pay_type == "03")
+                                                {
+                                                    sql = "select * from skv1 where ((skvf7='" + ptas.Cardnum + "' and skvf10=1) or (skvf8='" + ptas.Cardnum + "' and skvf11=1) or (skvf20='" + ptas.Cardnum + "')) and skf95='" + ptas.Cardpass + "' ";
+                                                }
+                                                else
+                                                {
+                                                    sql = "select * from skv1 where ((skvf7='" + ptas.Cardnum + "' and skvf10=1) or (skvf8='" + ptas.Cardnum + "' and skvf11=1) or (skvf20='" + ptas.Cardnum + "')) ";
+                                                }
+                                                DataSet ds_sql = MySqlHelper.MySqlHelper.Query(sql, LinkString);
                                                 if (ds_sql.Tables[0].Rows.Count > 0)
                                                 {
-                                                    float floDis = float.Parse(ds_sql.Tables[0].Rows[0]["skf99"].ToString());
-                                                    float floJF = ptas.Pay_amt * ((float.Parse("100") - floDis) / float.Parse("100"));
-                                                    float floOldJF = 0;
-                                                    string strOldMoneyid = "0";
-                                                    sql = "select * from skt6 where skf91=1 and skf64='" + txtUserid + "' ";
+                                                    string txtUserid = ds_sql.Tables[0].Rows[0]["skvf2"].ToString();
+
+                                                    sql = "select * from skt8 where skf104=1 and skf97='" + ptas.Tid + "' ";
                                                     ds_sql = MySqlHelper.MySqlHelper.Query(sql, LinkString);
                                                     if (ds_sql.Tables[0].Rows.Count > 0)
                                                     {
-                                                        floOldJF = float.Parse(ds_sql.Tables[0].Rows[0]["skf66"].ToString());
-                                                        strOldMoneyid = ds_sql.Tables[0].Rows[0]["skf63"].ToString();
-                                                    }
-                                                    if(ptas.Pay_type=="03")
-                                                    {
-                                                        sql = "update skt6 set skf66=skf66-" + floJF + " where skf91=1 and skf64='" + txtUserid + "' ";
-                                                    }
-                                                    else
-                                                    {
-                                                        sql = "update skt6 set skf66=skf66+" + floJF + " where skf91=1 and skf64='" + txtUserid + "' ";
-                                                    }
-                                                    
-                                                    int intds_sql = MySqlHelper.MySqlHelper.ExecuteSql(sql, LinkString);
-                                                    if (intds_sql > 0)
-                                                    {
-                                                        phan.Gen_Answer_XML(true, "", "");
-                                                        PacketTrans_answer.PacketTrans_answer ptan = new PacketTrans_answer.PacketTrans_answer();
-                                                        string epwd = phan.Request_time + ptan.Pay_msg;
-                                                        ptan.ReadXML(ptan, epwd, "交易成功");
-                                                        str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS004", phan, ptan);
-
-                                                        sql = "update skt14 set skf201=1 where skf158='" + ptas.Order_no + "' ";
-                                                        intds_sql = MySqlHelper.MySqlHelper.ExecuteSql(sql, LinkString);
-
-                                                        string strNewMoneyid = "";
-                                                        float floNewJF = 0;
+                                                        float floDis = float.Parse(ds_sql.Tables[0].Rows[0]["skf99"].ToString());
+                                                        float floJF = ptas.Pay_amt * ((float.Parse("100") - floDis) / float.Parse("100"));
+                                                        float floOldJF = 0;
+                                                        string strOldMoneyid = "0";
                                                         sql = "select * from skt6 where skf91=1 and skf64='" + txtUserid + "' ";
                                                         ds_sql = MySqlHelper.MySqlHelper.Query(sql, LinkString);
                                                         if (ds_sql.Tables[0].Rows.Count > 0)
                                                         {
-                                                            floNewJF = float.Parse(ds_sql.Tables[0].Rows[0]["skf66"].ToString());
-                                                            strNewMoneyid = ds_sql.Tables[0].Rows[0]["skf63"].ToString();
+                                                            floOldJF = float.Parse(ds_sql.Tables[0].Rows[0]["skf66"].ToString());
+                                                            strOldMoneyid = ds_sql.Tables[0].Rows[0]["skf63"].ToString();
+                                                        }
+                                                        if (ptas.Pay_type == "03")
+                                                        {
+                                                            sql = "update skt6 set skf66=skf66-" + floJF + " where skf91=1 and skf64='" + txtUserid + "' ";
+                                                        }
+                                                        else
+                                                        {
+                                                            sql = "update skt6 set skf66=skf66+" + floJF + " where skf91=1 and skf64='" + txtUserid + "' ";
                                                         }
 
-                                                        //插入历史
-                                                        sql = "insert into skt7(skf73,skf74,skf75,skf78,skf79,skf82,skf199,skf200) value('" + txtUserid + "','" + strOldMoneyid + "','" + strNewMoneyid + "','" + floOldJF + "','" + floNewJF + "','" + System.DateTime.Now.ToString() + "','" + ptas.Order_no + "',1) ";
-                                                        intds_sql = MySqlHelper.MySqlHelper.ExecuteSql(sql, LinkString);
+                                                        int intds_sql = MySqlHelper.MySqlHelper.ExecuteSql(sql, LinkString);
+                                                        if (intds_sql > 0)
+                                                        {
+                                                            phan.Gen_Answer_XML(true, "", "");
+                                                            PacketTrans_answer.PacketTrans_answer ptan = new PacketTrans_answer.PacketTrans_answer();
+                                                            string epwd = phan.Request_time + ptan.Pay_msg;
+                                                            ptan.ReadXML(ptan, epwd, "交易成功");
+                                                            str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS004", phan, ptan);
+
+                                                            sql = "update skt14 set skf201=1 where skf158='" + ptas.Order_no + "' ";
+                                                            intds_sql = MySqlHelper.MySqlHelper.ExecuteSql(sql, LinkString);
+
+                                                            string strNewMoneyid = "";
+                                                            float floNewJF = 0;
+                                                            sql = "select * from skt6 where skf91=1 and skf64='" + txtUserid + "' ";
+                                                            ds_sql = MySqlHelper.MySqlHelper.Query(sql, LinkString);
+                                                            if (ds_sql.Tables[0].Rows.Count > 0)
+                                                            {
+                                                                floNewJF = float.Parse(ds_sql.Tables[0].Rows[0]["skf66"].ToString());
+                                                                strNewMoneyid = ds_sql.Tables[0].Rows[0]["skf63"].ToString();
+                                                            }
+
+                                                            //插入历史
+                                                            sql = "insert into skt7(skf73,skf74,skf75,skf78,skf79,skf82,skf199,skf200) value('" + txtUserid + "','" + strOldMoneyid + "','" + strNewMoneyid + "','" + floOldJF + "','" + floNewJF + "','" + System.DateTime.Now.ToString() + "','" + ptas.Order_no + "',1) ";
+                                                            intds_sql = MySqlHelper.MySqlHelper.ExecuteSql(sql, LinkString);
+                                                        }
+                                                        else
+                                                        {
+                                                            phan.Gen_Answer_XML(false, "交易失败,未知错误,联系管理员", "");
+
+                                                            PacketTrans_answer.PacketTrans_answer ptan = new PacketTrans_answer.PacketTrans_answer();
+
+                                                            string epwd = phan.Request_time + ptan.Pay_msg;
+                                                            ptan.ReadXML(ptan, epwd, "交易失败,未知错误,联系管理员");
+                                                            str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS004", phan, ptan);
+
+                                                        }
+
                                                     }
                                                     else
                                                     {
-                                                        phan.Gen_Answer_XML(false, "交易失败,未知错误,联系管理员", "");
+                                                        phan.Gen_Answer_XML(false, "交易失败,POS机未授权", "");
 
                                                         PacketTrans_answer.PacketTrans_answer ptan = new PacketTrans_answer.PacketTrans_answer();
 
                                                         string epwd = phan.Request_time + ptan.Pay_msg;
-                                                        ptan.ReadXML(ptan, epwd, "交易失败,未知错误,联系管理员");
+                                                        ptan.ReadXML(ptan, epwd, "交易失败,POS机未授权");
                                                         str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS004", phan, ptan);
-                                                      
                                                     }
-
                                                 }
                                                 else
                                                 {
-                                                    phan.Gen_Answer_XML(false, "交易失败,POS机未授权", "");
+                                                    phan.Gen_Answer_XML(false, "交易失败,卡号密码错误", "");
 
                                                     PacketTrans_answer.PacketTrans_answer ptan = new PacketTrans_answer.PacketTrans_answer();
 
                                                     string epwd = phan.Request_time + ptan.Pay_msg;
-                                                    ptan.ReadXML(ptan, epwd, "交易失败,POS机未授权");
+                                                    ptan.ReadXML(ptan, epwd, "交易失败,卡号密码错误");
                                                     str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS004", phan, ptan);
                                                 }
-                                            }
-                                            else
-                                            {
-                                                phan.Gen_Answer_XML(false, "交易失败,卡号密码错误", "");
-
-                                                PacketTrans_answer.PacketTrans_answer ptan = new PacketTrans_answer.PacketTrans_answer();
-
-                                                string epwd = phan.Request_time + ptan.Pay_msg;
-                                                ptan.ReadXML(ptan, epwd, "交易失败,卡号密码错误");
-                                                str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS004", phan, ptan);
-                                            }
+                                            }                                            
                                         }
                                         else
                                         {
@@ -364,12 +367,12 @@ namespace WebService
                                             }
                                             else
                                             {
-                                                sql = "select * from skv1 where ((skvf7='" + ptas.Cardnum + "' and skvf10=1) or (skvf8='" + ptas.Cardnum + "' and skvf11=1) or (skvf20='" + ptas.Cardnum + "'))) ";
+                                                sql = "select * from skv1 where ((skvf7='" + ptas.Cardnum + "' and skvf10=1) or (skvf8='" + ptas.Cardnum + "' and skvf11=1) or (skvf20='" + ptas.Cardnum + "')) ";
                                             }
                                             DataSet ds_sql = MySqlHelper.MySqlHelper.Query(sql, LinkString);
                                             if (ds_sql.Tables[0].Rows.Count > 0)
                                             {
-                                                string txtUserid = ds_sql.Tables[0].Rows[0]["skf36"].ToString();
+                                                string txtUserid = ds_sql.Tables[0].Rows[0]["skvf2"].ToString();
 
                                                 sql = "select * from skt8 where skf104=1 and skf97='" + ptas.Tid + "' ";
                                                 ds_sql = MySqlHelper.MySqlHelper.Query(sql, LinkString);
