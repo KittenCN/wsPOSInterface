@@ -60,11 +60,13 @@ namespace XMLHelper
                         XmlElement company_id = GenClass.GenClass.GetXmlElement(xmlDocnew, "company_id", plan.Company_id);
                         XmlElement delivery_info = GenClass.GenClass.GetXmlElement(xmlDocnew, "delivery_info", plan.Delivery_info);
                         XmlElement check_value = GenClass.GenClass.GetXmlElement(xmlDocnew, "check_value", plan.Check_value);
+                        XmlElement public_key = GenClass.GenClass.GetXmlElement(xmlDocnew, "public_key", plan.Public_key);
 
                         Transaction_Body.AppendChild(delivery_man);
                         Transaction_Body.AppendChild(company_id);
                         Transaction_Body.AppendChild(delivery_info);
                         Transaction_Body.AppendChild(check_value);
+                        Transaction_Body.AppendChild(public_key);
                         root.AppendChild(Transaction_Body);
 
                         StringWriter sw = new StringWriter();

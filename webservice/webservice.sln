@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebService", "webservice\WebService.csproj", "{6B2FA43D-90D9-48EE-A58D-0E3E49F8D6FF}"
 	ProjectSection(ProjectDependencies) = postProject
 		{FA2C3E12-12E6-4A04-A772-8EA62F4A0C93} = {FA2C3E12-12E6-4A04-A772-8EA62F4A0C93}
+		{825BCE2C-8646-4894-9B3E-65F66ED0D013} = {825BCE2C-8646-4894-9B3E-65F66ED0D013}
+		{43743350-B684-4BD7-A0F4-0C852C8F90C4} = {43743350-B684-4BD7-A0F4-0C852C8F90C4}
+		{3196446A-84BC-4D25-BB2C-4B7F1AB98B3D} = {3196446A-84BC-4D25-BB2C-4B7F1AB98B3D}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GenClass", "GenClass\GenClass.csproj", "{A66D6E74-AB01-4D5A-BC65-7F3CFD1E8DA9}"
@@ -22,16 +25,31 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PacketLogin_ask", "PacketLogin_ask\PacketLogin_ask.csproj", "{5C25555E-A642-47B7-BFEB-BBF882BBAC02}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PacketLogin_answer", "PacketLogin_answer\PacketLogin_answer.csproj", "{8BB9309D-972E-4151-ABDF-20B439712E17}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3196446A-84BC-4D25-BB2C-4B7F1AB98B3D} = {3196446A-84BC-4D25-BB2C-4B7F1AB98B3D}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PacketOrder_answer", "PacketOrder_answer\PacketOrder_answer.csproj", "{169A8CFD-9E42-4FAF-84BB-F9038A3F3087}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3196446A-84BC-4D25-BB2C-4B7F1AB98B3D} = {3196446A-84BC-4D25-BB2C-4B7F1AB98B3D}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PacketOrder_ask", "PacketOrder_ask\PacketOrder_ask.csproj", "{2620A297-91F4-440D-8BC3-2863BB0DCB10}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PacketTrans_answer", "PacketTrans_answer\PacketTrans_answer.csproj", "{EF8EC880-6793-4994-BA17-D5E7D132215A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3196446A-84BC-4D25-BB2C-4B7F1AB98B3D} = {3196446A-84BC-4D25-BB2C-4B7F1AB98B3D}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PacketTrans_ask", "PacketTrans_ask\PacketTrans_ask.csproj", "{9811EA59-1596-4CCF-990B-D9463BC32F9A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XMLHelper", "XMLHelper\XMLHelper.csproj", "{AEE75C35-068C-4622-AAD0-00CBFFE041D5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnDeCode", "EnDeCode\EnDeCode.csproj", "{3196446A-84BC-4D25-BB2C-4B7F1AB98B3D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PacketLogout_ask", "PacketLogout_ask\PacketLogout_ask.csproj", "{43743350-B684-4BD7-A0F4-0C852C8F90C4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PacketLogout_answer", "PacketLogout_answer\PacketLogout_answer.csproj", "{825BCE2C-8646-4894-9B3E-65F66ED0D013}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -87,6 +105,18 @@ Global
 		{AEE75C35-068C-4622-AAD0-00CBFFE041D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AEE75C35-068C-4622-AAD0-00CBFFE041D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AEE75C35-068C-4622-AAD0-00CBFFE041D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3196446A-84BC-4D25-BB2C-4B7F1AB98B3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3196446A-84BC-4D25-BB2C-4B7F1AB98B3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3196446A-84BC-4D25-BB2C-4B7F1AB98B3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3196446A-84BC-4D25-BB2C-4B7F1AB98B3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43743350-B684-4BD7-A0F4-0C852C8F90C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43743350-B684-4BD7-A0F4-0C852C8F90C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43743350-B684-4BD7-A0F4-0C852C8F90C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43743350-B684-4BD7-A0F4-0C852C8F90C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{825BCE2C-8646-4894-9B3E-65F66ED0D013}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{825BCE2C-8646-4894-9B3E-65F66ED0D013}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{825BCE2C-8646-4894-9B3E-65F66ED0D013}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{825BCE2C-8646-4894-9B3E-65F66ED0D013}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

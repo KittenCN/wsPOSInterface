@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8BB9309D-972E-4151-ABDF-20B439712E17}</ProjectGuid>
+    <ProjectGuid>{825BCE2C-8646-4894-9B3E-65F66ED0D013}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PacketLogin_answer</RootNamespace>
-    <AssemblyName>PacketLogin_answer</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <RootNamespace>PacketLogout_answer</RootNamespace>
+    <AssemblyName>PacketLogout_answer</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -41,7 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PacketLogin_answer.cs" />
+    <Compile Include="PacketLogout_answer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -52,6 +51,18 @@
     <ProjectReference Include="..\GenClass\GenClass.csproj">
       <Project>{a66d6e74-ab01-4d5a-bc65-7f3cfd1e8da9}</Project>
       <Name>GenClass</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MySqlHelper\MySqlHelper.csproj">
+      <Project>{fa2c3e12-12e6-4a04-a772-8ea62f4a0c93}</Project>
+      <Name>MySqlHelper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PacketLogout_ask\PacketLogout_ask.csproj">
+      <Project>{43743350-b684-4bd7-a0f4-0c852c8f90c4}</Project>
+      <Name>PacketLogout_ask</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\XMLHelper\XMLHelper.csproj">
+      <Project>{aee75c35-068c-4622-aad0-00cbffe041d5}</Project>
+      <Name>XMLHelper</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

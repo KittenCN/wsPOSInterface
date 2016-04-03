@@ -24,7 +24,7 @@ namespace PacketLogin_answer
             set { delivery_man = value; }
         }
 
-        /////员工登录密码;32位md5摘要(大写)
+        ///员工登录密码;32位md5摘要(大写)
         private string password;
         public string Passwoed
         {
@@ -48,7 +48,17 @@ namespace PacketLogin_answer
             set { check_value = value; }
         }
 
-        public void ReadXML(XmlNode xn, string epwd)
+        /// <summary>
+        /// 本次使用的DES公钥
+        /// </summary>
+        private string public_key;
+        public string Public_key
+        {
+            get { return public_key; }
+            set { public_key = value; }
+        }
+
+        public void ReadXML(XmlNode xn, string epwd,string pKey)
         {
             Delivery_man = xn.SelectSingleNode("delivery_man").InnerText;
             if(xn.SelectSingleNode("company_id")==null)
@@ -58,6 +68,8 @@ namespace PacketLogin_answer
             Delivery_info = "测试站点";
             MD5 md5Hash = MD5.Create();
             Check_value = GenClass.GenClass.GetMd5Hash(md5Hash, epwd);
+            EnDeCode.EnDeCode EDC = new EnDeCode.EnDeCode();
+            Public_key = EDC.DesEncrypt(EDC.GetHexString(16),pKey);
         }
 
     }

@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{8BB9309D-972E-4151-ABDF-20B439712E17}</ProjectGuid>
+    <ProjectGuid>{43743350-B684-4BD7-A0F4-0C852C8F90C4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PacketLogin_answer</RootNamespace>
-    <AssemblyName>PacketLogin_answer</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <RootNamespace>PacketLogout_ask</RootNamespace>
+    <AssemblyName>PacketLogout_ask</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -41,18 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PacketLogin_answer.cs" />
+    <Compile Include="PacketLogout_ask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\EnDeCode\EnDeCode.csproj">
-      <Project>{3196446a-84bc-4d25-bb2c-4b7f1ab98b3d}</Project>
-      <Name>EnDeCode</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\GenClass\GenClass.csproj">
-      <Project>{a66d6e74-ab01-4d5a-bc65-7f3cfd1e8da9}</Project>
-      <Name>GenClass</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

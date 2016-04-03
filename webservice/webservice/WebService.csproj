@@ -98,6 +98,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EnDeCode\EnDeCode.csproj">
+      <Project>{3196446a-84bc-4d25-bb2c-4b7f1ab98b3d}</Project>
+      <Name>EnDeCode</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GenClass\GenClass.csproj">
       <Project>{a66d6e74-ab01-4d5a-bc65-7f3cfd1e8da9}</Project>
       <Name>GenClass</Name>
@@ -121,6 +125,14 @@
     <ProjectReference Include="..\PacketLogin_ask\PacketLogin_ask.csproj">
       <Project>{5c25555e-a642-47b7-bfeb-bbf882bbac02}</Project>
       <Name>PacketLogin_ask</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PacketLogout_answer\PacketLogout_answer.csproj">
+      <Project>{825bce2c-8646-4894-9b3e-65f66ed0d013}</Project>
+      <Name>PacketLogout_answer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PacketLogout_ask\PacketLogout_ask.csproj">
+      <Project>{43743350-b684-4bd7-a0f4-0c852c8f90c4}</Project>
+      <Name>PacketLogout_ask</Name>
     </ProjectReference>
     <ProjectReference Include="..\PacketOrder_answer\PacketOrder_answer.csproj">
       <Project>{169a8cfd-9e42-4faf-84bb-f9038a3f3087}</Project>
