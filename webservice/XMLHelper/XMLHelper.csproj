@@ -57,6 +57,10 @@
       <Project>{8bb9309d-972e-4151-abdf-20b439712e17}</Project>
       <Name>PacketLogin_answer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PacketLogout_answer\PacketLogout_answer.csproj">
+      <Project>{825bce2c-8646-4894-9b3e-65f66ed0d013}</Project>
+      <Name>PacketLogout_answer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PacketOrder_answer\PacketOrder_answer.csproj">
       <Project>{169a8cfd-9e42-4faf-84bb-f9038a3f3087}</Project>
       <Name>PacketOrder_answer</Name>

@@ -123,7 +123,7 @@ namespace WebService
                                         str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS001", phan, plan);
 
                                         strSQL = "insert into skt17(skf203,skf204,skf205,skf206,skf208) ";
-                                        strSQL = strSQL + "value('" + phas.Terminal_eqno + "',0,'" + plan.Public_key + "','" + System.DateTime.Now.ToString() + "','" + plan.Delivery_man + "' ";
+                                        strSQL = strSQL + "value('" + phas.Terminal_eqno + "',0,'" + plan.Public_key + "','" + System.DateTime.Now.ToString() + "','" + plan.Delivery_man + "') ";
                                         DS = MySqlHelper.MySqlHelper.Query(strSQL, LinkString);
                                     }
                                     else
@@ -176,7 +176,10 @@ namespace WebService
                                 if (DS.Tables[0].Rows.Count == 1 && xn_trans004.SelectSingleNode("check_value").InnerText != null && xn_trans004.SelectSingleNode("check_value").InnerText != "")  //判断效验值,待补充
                                 {
                                     PacketTrans_ask.PacketTrans_ask ptas = new PacketTrans_ask.PacketTrans_ask();
+                                    EnDeCode.EnDeCode edc = new EnDeCode.EnDeCode();
                                     string str_mysql = "";
+                                    string strEnpKey = DS.Tables[0].Rows[0]["skf205"].ToString();
+                                    string strDepKey = edc.DesDecrypt(strEnpKey, pKey);
 
                                     ptas.ReadXML(xn_trans004);
 
@@ -212,7 +215,7 @@ namespace WebService
                                             {
                                                 if (ptas.Pay_type == "03")
                                                 {
-                                                    sql = "select * from skv1 where ((skvf7='" + ptas.Cardnum + "' and skvf10=1) or (skvf8='" + ptas.Cardnum + "' and skvf11=1) or (skvf20='" + ptas.Cardnum + "')) and skf95='" + ptas.Cardpass + "' ";
+                                                    sql = "select * from skv1 where ((skvf7='" + ptas.Cardnum + "' and skvf10=1) or (skvf8='" + ptas.Cardnum + "' and skvf11=1) or (skvf20='" + ptas.Cardnum + "')) and skf95='" + edc.DesDecrypt(ptas.Cardpass,strDepKey) + "' ";
                                                 }
                                                 else
                                                 {
@@ -366,7 +369,11 @@ namespace WebService
                                 if (DS.Tables[0].Rows.Count == 1 && xn_trans005.SelectSingleNode("check_value").InnerText != null && xn_trans005.SelectSingleNode("check_value").InnerText != "")  //判断效验值,待补充
                                 {
                                     PacketTrans_ask.PacketTrans_ask ptas = new PacketTrans_ask.PacketTrans_ask();
+                                    EnDeCode.EnDeCode edc = new EnDeCode.EnDeCode();
                                     string str_mysql = "";
+                                    string strEnpKey = DS.Tables[0].Rows[0]["skf205"].ToString();
+                                    string strDepKey = edc.DesDecrypt(strEnpKey, pKey);
+
 
                                     ptas.ReadXML(xn_trans005);
 
@@ -388,7 +395,7 @@ namespace WebService
                                             string sql;
                                             if (ptas.Pay_type == "03")
                                             {
-                                                sql = "select * from skv1 where ((skvf7='" + ptas.Cardnum + "' and skvf10=1) or (skvf8='" + ptas.Cardnum + "' and skvf11=1) or (skvf20='" + ptas.Cardnum + "')) and skf95='" + ptas.Cardpass + "' ";
+                                                sql = "select * from skv1 where ((skvf7='" + ptas.Cardnum + "' and skvf10=1) or (skvf8='" + ptas.Cardnum + "' and skvf11=1) or (skvf20='" + ptas.Cardnum + "')) and skf95='" + edc.DesDecrypt(ptas.Cardpass, strDepKey) + "' ";
                                             }
                                             else
                                             {
@@ -545,33 +552,27 @@ namespace WebService
                         //登出及对账
                         case "TRANS006":
                             XmlNode xn_trans006 = xmlDoc.SelectSingleNode("Transaction/Transaction_Body");
+                            
                             if (xn_trans006 != null)
                             {
+                                PacketLogout_ask.PacketLogout_ask plas = new PacketLogout_ask.PacketLogout_ask();
+                                plas.ReadXML(xn_trans006);
                                 string strSQL = "select * from skt17 where skf204=0 and skf203='" + phas.Terminal_eqno + "' ";
                                 DataSet DS;
                                 DS = MySqlHelper.MySqlHelper.Query(strSQL, LinkString);
                                 if (DS.Tables[0].Rows.Count == 1 && xn_trans006.SelectSingleNode("check_value").InnerText != null && xn_trans006.SelectSingleNode("check_value").InnerText != "")
                                 {
                                     string strID = DS.Tables[0].Rows[0][0].ToString();
-                                    PacketLogout_ask.PacketLogout_ask plas = new PacketLogout_ask.PacketLogout_ask();
-                                    plas.ReadXML(xn_trans006);
                                     DateTime dtBeginDateTime = DateTime.Parse(DS.Tables[0].Rows[0]["skf206"].ToString());
                                     string strBeginDateTime = dtBeginDateTime.ToString("yyyyMMddHHmmss");
-                                    strSQL = "SELECT COUNT(*),SUM(skf166) FROM skt14 WHERE skf201=1 and skf164='" + plas.Tid + "' and skf173>='" + strBeginDateTime + "' ";
+                                    strSQL = "SELECT COUNT(*),IF(ISNULL(SUM(skf166)),0,SUM(skf166)) FROM skt14 WHERE skf201=1 and skf164='" + plas.Tid + "' and skf173>='" + strBeginDateTime + "' ";
                                     DataSet dsDT;
                                     dsDT = MySqlHelper.MySqlHelper.Query(strSQL, LinkString);
                                     if(dsDT.Tables[0].Rows.Count>0)
                                     {
-                                        if(dsDT.Tables[0].Rows[0][0].ToString()==plas.Total_times.ToString() && dsDT.Tables[0].Rows[0][1].ToString()==plas.Total_amount.ToString())
+                                        if(int.Parse(dsDT.Tables[0].Rows[0][0].ToString()) == int.Parse(plas.Total_times.ToString()) && float.Parse(dsDT.Tables[0].Rows[0][1].ToString()) == float.Parse(plas.Total_amount.ToString()))
                                         {
                                             phan.Gen_Answer_XML(true, "", "");
-                                            //PacketTrans_answer.PacketTrans_answer ptan = new PacketTrans_answer.PacketTrans_answer();
-                                            //string epwd = phan.Request_time + ptan.Pay_msg;
-                                            //ptan.ReadXML(ptan, epwd, "交易成功");
-                                            //str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS006", phan, ptan);
-
-                                            //string sql = "update skt14 set skf201=1 where skf158='" + ptas.Order_no + "' ";
-                                            //int intds_sql = MySqlHelper.MySqlHelper.ExecuteSql(sql, LinkString);
                                             PacketLogout_answer.PacketLogout_answer plan = new PacketLogout_answer.PacketLogout_answer();
                                             string epwd = phan.Request_time + phan.Resp_msg;
                                             plan.ReadXML(plas, epwd);
@@ -582,37 +583,47 @@ namespace WebService
                                         else
                                         {
                                             phan.Gen_Answer_XML(false, "登录失败,总次数或总金额不匹配", "");
-                                            PacketTrans_answer.PacketTrans_answer ptan = new PacketTrans_answer.PacketTrans_answer();
-                                            string epwd = phan.Request_time + ptan.Pay_msg;
-                                            ptan.ReadXML(ptan, epwd, "登录失败,总次数或总金额不匹配");
-                                            str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS006", phan, ptan);
+                                            PacketLogout_answer.PacketLogout_answer plan = new PacketLogout_answer.PacketLogout_answer();
+                                            string epwd = phan.Request_time + phan.Resp_msg;
+                                            plan.ReadXML(plas, epwd);
+                                            str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS006", phan, plan);
                                         }
                                     }
                                     else
                                     {
-                                        phan.Gen_Answer_XML(false, "登录失败,数据错误,请于管理员联系", "");
-                                        PacketTrans_answer.PacketTrans_answer ptan = new PacketTrans_answer.PacketTrans_answer();
-                                        string epwd = phan.Request_time + ptan.Pay_msg;
-                                        ptan.ReadXML(ptan, epwd, "登录失败,数据错误,请于管理员联系");
-                                        str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS006", phan, ptan);
+                                        if (int.Parse(plas.Total_times.ToString()) == 0 && float.Parse(plas.Total_amount.ToString()) == 0)
+                                        {
+                                            phan.Gen_Answer_XML(true, "", "");
+                                            PacketLogout_answer.PacketLogout_answer plan = new PacketLogout_answer.PacketLogout_answer();
+                                            string epwd = phan.Request_time + phan.Resp_msg;
+                                            plan.ReadXML(plas, epwd);
+                                            str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS006", phan, plan);
+                                            string sql = "update skt17 set skf204=1,skf207='" + System.DateTime.Now.ToString() + "' where skf202='" + strID + "' ";
+                                            int intds_sql = MySqlHelper.MySqlHelper.ExecuteSql(sql, LinkString);
+                                        }
+                                        else
+                                        {
+                                            phan.Gen_Answer_XML(false, "登录失败,总次数或总金额不匹配", "");
+                                            PacketLogout_answer.PacketLogout_answer plan = new PacketLogout_answer.PacketLogout_answer();
+                                            string epwd = phan.Request_time + phan.Resp_msg;
+                                            plan.ReadXML(plas, epwd);
+                                            str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS006", phan, plan);
+                                        }
                                     }                              
                                 }
                                 else
                                 {
                                     phan.Gen_Answer_XML(false, "登录失败,效验错误或POS设备未登录", "");
-                                    PacketTrans_answer.PacketTrans_answer ptan = new PacketTrans_answer.PacketTrans_answer();
-                                    string epwd = phan.Request_time + ptan.Pay_msg;
-                                    ptan.ReadXML(ptan, epwd, "登录失败,效验错误或POS设备未登录");
-                                    str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS006", phan, ptan);
+                                    PacketLogout_answer.PacketLogout_answer plan = new PacketLogout_answer.PacketLogout_answer();
+                                    string epwd = phan.Request_time + phan.Resp_msg;
+                                    plan.ReadXML(plas, epwd);
+                                    str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS006", phan, plan);
                                 }
                             }
                             else
                             {
-                                phan.Gen_Answer_XML(false, "登录失败,数据包传输错误", "");
-                                PacketTrans_answer.PacketTrans_answer ptan = new PacketTrans_answer.PacketTrans_answer();
-                                string epwd = phan.Request_time + ptan.Pay_msg;
-                                ptan.ReadXML(ptan, epwd, "登录失败,数据包传输错误");
-                                str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS00^", phan, ptan);
+                                R_string(STDHead + PacketHead_Error + PacketBody_Error + STDFoot);
+                                return STDHead + PacketHead_Error + PacketBody_Error + STDFoot;
                             }
                             break;
 

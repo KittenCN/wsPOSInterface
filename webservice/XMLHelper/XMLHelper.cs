@@ -99,6 +99,24 @@ namespace XMLHelper
                     {
                         goto case "TRANS004";
                     }
+                case "TRANS006":
+                    {
+                        PacketLogout_answer.PacketLogout_answer plan = an as PacketLogout_answer.PacketLogout_answer;
+
+                        XmlElement delivery_man = GenClass.GenClass.GetXmlElement(xmlDocnew, "delivery_man", plan.Delivery_man);
+                        XmlElement tid = GenClass.GenClass.GetXmlElement(xmlDocnew, "tid", plan.Tid);
+                        XmlElement check_value = GenClass.GenClass.GetXmlElement(xmlDocnew, "check_value", plan.Check_value);
+
+                        Transaction_Body.AppendChild(delivery_man);
+                        Transaction_Body.AppendChild(tid);
+                        Transaction_Body.AppendChild(check_value);
+                        root.AppendChild(Transaction_Body);
+
+                        StringWriter sw = new StringWriter();
+                        xmlDocnew.Save(sw);
+                        str_result = sw.ToString();
+                        break;
+                    }
                 default:
                     {
                         str_result = STDHead + PacketHead_Error + PacketBody_Error + STDFoot;
