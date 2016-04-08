@@ -10,7 +10,7 @@ namespace WebService
     /// <summary>
     /// POSinterface 的摘要说明
     /// </summary>
-    [WebService(Namespace = "http://wstest2.china-ess.com/")]
+    [WebService(Namespace = "http://61.129.70.241/")]
     [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
     [System.ComponentModel.ToolboxItem(false)]
     // 若要允许使用 ASP.NET AJAX 从脚本中调用此 Web 服务，请取消注释以下行。 
@@ -231,7 +231,8 @@ namespace WebService
                                                     if (ds_sql.Tables[0].Rows.Count > 0)
                                                     {
                                                         float floDis = float.Parse(ds_sql.Tables[0].Rows[0]["skf99"].ToString());
-                                                        float floJF = ptas.Pay_amt * ((float.Parse("100") - floDis) / float.Parse("100"));
+                                                        //float floJF = ptas.Pay_amt * ((float.Parse("100") - floDis) / float.Parse("100"));
+                                                        float floJF = ptas.Pay_amt * floDis;
                                                         float floOldJF = 0;
                                                         string strOldMoneyid = "0";
                                                         sql = "select * from skt6 where skf91=1 and skf64='" + txtUserid + "' ";
