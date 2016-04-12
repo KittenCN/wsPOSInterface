@@ -161,8 +161,8 @@ namespace WebService
                             break;
 
                         //订单合并信息查询,待完成
-                        case "TRANS003":
-                            break;
+                        //case "TRANS003":
+                        //    break;
 
                         //消费通知
                         case "TRANS004":
@@ -215,7 +215,7 @@ namespace WebService
                                             {
                                                 if (ptas.Pay_type == "03")
                                                 {
-                                                    string strInSql= "select skfv12,skvf2 from skv1 where ((skvf7='" + ptas.Cardnum + "' and skvf10=1) or (skvf8='" + ptas.Cardnum + "' and skvf11=1) or (skvf20='" + ptas.Cardnum + "')) ";
+                                                    string strInSql= "select skvf12,skvf2 from skv1 where ((skvf7='" + ptas.Cardnum + "' and skvf10=1) or (skvf8='" + ptas.Cardnum + "' and skvf11=1) or (skvf20='" + ptas.Cardnum + "')) ";
                                                     string DePass = "";
                                                     string strUserID = "";
                                                     DataSet dsInSql= MySqlHelper.MySqlHelper.Query(strInSql, LinkString);
@@ -226,7 +226,7 @@ namespace WebService
                                                         string strEnSql = "update skt4 set skf228='" + edc.GetXOR(edc.GetMD5(edc.GetASCII(DePass))) + "' where skf36='" + strUserID + "' ";
                                                         DataSet dsTemp = MySqlHelper.MySqlHelper.Query(strEnSql, LinkString);
                                                     }
-                                                    sql = "select * from skv1 where ((skvf7='" + ptas.Cardnum + "' and skvf10=1) or (skvf8='" + ptas.Cardnum + "' and skvf11=1) or (skvf20='" + ptas.Cardnum + "')) and skvf21='" + edc.DesDecrypt(ptas.Cardpass, strDepKey) + "' ";
+                                                    sql = "select * from skv1 where ((skvf7='" + ptas.Cardnum + "' and skvf10=1) or (skvf8='" + ptas.Cardnum + "' and skvf11=1) or (skvf20='" + ptas.Cardnum + "')) and skvf21='" + edc.DesDecrypt(ptas.Cardpass, strDepKey).Substring(0,8) + "' ";
                                                 }
                                                 else
                                                 {
@@ -605,7 +605,7 @@ namespace WebService
                                         }
                                         else
                                         {
-                                            phan.Gen_Answer_XML(false, "登录失败,总次数或总金额不匹配", "");
+                                            phan.Gen_Answer_XML(false, "登出失败,总次数或总金额不匹配", "");
                                             PacketLogout_answer.PacketLogout_answer plan = new PacketLogout_answer.PacketLogout_answer();
                                             string epwd = phan.Request_time + phan.Resp_msg;
                                             plan.ReadXML(plas, epwd);
@@ -626,7 +626,7 @@ namespace WebService
                                         }
                                         else
                                         {
-                                            phan.Gen_Answer_XML(false, "登录失败,总次数或总金额不匹配", "");
+                                            phan.Gen_Answer_XML(false, "登出失败,总次数或总金额不匹配", "");
                                             PacketLogout_answer.PacketLogout_answer plan = new PacketLogout_answer.PacketLogout_answer();
                                             string epwd = phan.Request_time + phan.Resp_msg;
                                             plan.ReadXML(plas, epwd);
@@ -636,7 +636,7 @@ namespace WebService
                                 }
                                 else
                                 {
-                                    phan.Gen_Answer_XML(false, "登录失败,效验错误或POS设备未登录", "");
+                                    phan.Gen_Answer_XML(false, "登出失败,效验错误或POS设备未登录", "");
                                     PacketLogout_answer.PacketLogout_answer plan = new PacketLogout_answer.PacketLogout_answer();
                                     string epwd = phan.Request_time + phan.Resp_msg;
                                     plan.ReadXML(plas, epwd);
