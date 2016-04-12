@@ -215,7 +215,18 @@ namespace WebService
                                             {
                                                 if (ptas.Pay_type == "03")
                                                 {
-                                                    sql = "select * from skv1 where ((skvf7='" + ptas.Cardnum + "' and skvf10=1) or (skvf8='" + ptas.Cardnum + "' and skvf11=1) or (skvf20='" + ptas.Cardnum + "')) and skf95='" + edc.DesDecrypt(ptas.Cardpass,strDepKey) + "' ";
+                                                    string strInSql= "select skfv12,skvf2 from skv1 where ((skvf7='" + ptas.Cardnum + "' and skvf10=1) or (skvf8='" + ptas.Cardnum + "' and skvf11=1) or (skvf20='" + ptas.Cardnum + "')) ";
+                                                    string DePass = "";
+                                                    string strUserID = "";
+                                                    DataSet dsInSql= MySqlHelper.MySqlHelper.Query(strInSql, LinkString);
+                                                    if (dsInSql.Tables[0].Rows.Count > 0)
+                                                    {
+                                                        DePass = dsInSql.Tables[0].Rows[0][0].ToString();
+                                                        strUserID = dsInSql.Tables[0].Rows[0][1].ToString();
+                                                        string strEnSql = "update skt4 set skf228='" + edc.GetXOR(edc.GetMD5(edc.GetASCII(DePass))) + "' where skf36='" + strUserID + "' ";
+                                                        DataSet dsTemp = MySqlHelper.MySqlHelper.Query(strEnSql, LinkString);
+                                                    }
+                                                    sql = "select * from skv1 where ((skvf7='" + ptas.Cardnum + "' and skvf10=1) or (skvf8='" + ptas.Cardnum + "' and skvf11=1) or (skvf20='" + ptas.Cardnum + "')) and skvf21='" + edc.DesDecrypt(ptas.Cardpass, strDepKey) + "' ";
                                                 }
                                                 else
                                                 {
@@ -396,7 +407,18 @@ namespace WebService
                                             string sql;
                                             if (ptas.Pay_type == "03")
                                             {
-                                                sql = "select * from skv1 where ((skvf7='" + ptas.Cardnum + "' and skvf10=1) or (skvf8='" + ptas.Cardnum + "' and skvf11=1) or (skvf20='" + ptas.Cardnum + "')) and skf95='" + edc.DesDecrypt(ptas.Cardpass, strDepKey) + "' ";
+                                                string strInSql = "select skfv12,skvf2 from skv1 where ((skvf7='" + ptas.Cardnum + "' and skvf10=1) or (skvf8='" + ptas.Cardnum + "' and skvf11=1) or (skvf20='" + ptas.Cardnum + "')) ";
+                                                string DePass = "";
+                                                string strUserID = "";
+                                                DataSet dsInSql = MySqlHelper.MySqlHelper.Query(strInSql, LinkString);
+                                                if (dsInSql.Tables[0].Rows.Count > 0)
+                                                {
+                                                    DePass = dsInSql.Tables[0].Rows[0][0].ToString();
+                                                    strUserID = dsInSql.Tables[0].Rows[0][1].ToString();
+                                                    string strEnSql = "update skt4 set skf228='" + edc.GetXOR(edc.GetMD5(edc.GetASCII(DePass))) + "' where skf36='" + strUserID + "' ";
+                                                    DataSet dsTemp = MySqlHelper.MySqlHelper.Query(strEnSql, LinkString);
+                                                }
+                                                sql = "select * from skv1 where ((skvf7='" + ptas.Cardnum + "' and skvf10=1) or (skvf8='" + ptas.Cardnum + "' and skvf11=1) or (skvf20='" + ptas.Cardnum + "')) and skvf21='" + edc.DesDecrypt(ptas.Cardpass, strDepKey) + "' ";
                                             }
                                             else
                                             {
