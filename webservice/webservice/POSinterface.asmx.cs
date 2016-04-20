@@ -271,6 +271,17 @@ namespace WebService
                                                             ptan.ReadXML(ptan, epwd, "交易成功");
                                                             str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS004", phan, ptan);
 
+                                                            if(ptas.Pay_type!="03")
+                                                            {
+                                                                string strSMS = "select skf26 from skt3 where skf53=1 and skf20='" + txtUserid + "' ";
+                                                                DataSet dsSMS = MySqlHelper.MySqlHelper.Query(strSMS, LinkString);
+                                                                if(dsSMS.Tables[0].Rows.Count>0)
+                                                                {
+                                                                    SMS.SMS sms = new SMS.SMS();
+                                                                    sms.send_reg_sms(2, dsSMS.Tables[0].Rows[0].ItemArray[0].ToString(), floJF);
+                                                                }                                                               
+                                                            }
+
                                                             sql = "update skt14 set skf201=1 where skf158='" + ptas.Order_no + "' ";
                                                             intds_sql = MySqlHelper.MySqlHelper.ExecuteSql(sql, LinkString);
 

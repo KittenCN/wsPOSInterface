@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebService", "webservice\WebService.csproj", "{6B2FA43D-90D9-48EE-A58D-0E3E49F8D6FF}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -50,6 +50,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PacketLogout_ask", "PacketLogout_ask\PacketLogout_ask.csproj", "{43743350-B684-4BD7-A0F4-0C852C8F90C4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PacketLogout_answer", "PacketLogout_answer\PacketLogout_answer.csproj", "{825BCE2C-8646-4894-9B3E-65F66ED0D013}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMS", "SMS\SMS.csproj", "{FE4C7EAA-C8A4-4818-A180-39442E964A7E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -117,6 +119,10 @@ Global
 		{825BCE2C-8646-4894-9B3E-65F66ED0D013}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{825BCE2C-8646-4894-9B3E-65F66ED0D013}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{825BCE2C-8646-4894-9B3E-65F66ED0D013}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE4C7EAA-C8A4-4818-A180-39442E964A7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE4C7EAA-C8A4-4818-A180-39442E964A7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE4C7EAA-C8A4-4818-A180-39442E964A7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE4C7EAA-C8A4-4818-A180-39442E964A7E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -150,6 +150,10 @@
       <Project>{9811ea59-1596-4ccf-990b-d9463bc32f9a}</Project>
       <Name>PacketTrans_ask</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SMS\SMS.csproj">
+      <Project>{fe4c7eaa-c8a4-4818-a180-39442e964a7e}</Project>
+      <Name>SMS</Name>
+    </ProjectReference>
     <ProjectReference Include="..\XMLHelper\XMLHelper.csproj">
       <Project>{aee75c35-068c-4622-aad0-00cbffe041d5}</Project>
       <Name>XMLHelper</Name>
