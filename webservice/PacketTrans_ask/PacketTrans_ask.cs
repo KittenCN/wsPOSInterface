@@ -183,8 +183,15 @@ namespace PacketTrans_ask
             Hostserial = xn.SelectSingleNode("hostserial").InnerText;
             Authcode = xn.SelectSingleNode("authcode").InnerText;
             Transtime = xn.SelectSingleNode("transtime").InnerText;
-            Check_value = xn.SelectSingleNode("check_value").InnerText;
-            Cardnum = xn.SelectSingleNode("cardnum").InnerText;
+            Check_value = xn.SelectSingleNode("check_value").InnerText;            
+            if(xn.SelectSingleNode("cardnum")==null)
+            {
+                Cardnum = "000000000000";
+            }
+            else
+            {
+                Cardnum = xn.SelectSingleNode("cardnum").InnerText;
+            }
             if(xn.SelectSingleNode("cardpass")==null)
             {
                 Cardpass = "000000000";
