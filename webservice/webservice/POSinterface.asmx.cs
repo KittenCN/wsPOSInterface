@@ -116,7 +116,7 @@ namespace WebService
                                     string strSQL = "select * from skt17 where skf204=0 and skf203='" + phas.Terminal_eqno + "' ";
                                     DataSet DS;
                                     DS = MySqlHelper.MySqlHelper.Query(strSQL, LinkString);
-                                    if (DS.Tables[0].Rows.Count == 0)
+                                    if (DS.Tables[0].Rows.Count == 0 || 1==1)   //暂时取消未登出不能登入限制
                                     {
                                         string epwd = phan.Request_time + plan.Delivery_man;
                                         plan.ReadXML(xn_login, epwd, pKey);
@@ -604,7 +604,7 @@ namespace WebService
                                     dsDT = MySqlHelper.MySqlHelper.Query(strSQL, LinkString);
                                     if(dsDT.Tables[0].Rows.Count>0)
                                     {
-                                        if(int.Parse(dsDT.Tables[0].Rows[0][0].ToString()) == int.Parse(plas.Total_times.ToString()) && float.Parse(dsDT.Tables[0].Rows[0][1].ToString()) == float.Parse(plas.Total_amount.ToString()))
+                                        if((int.Parse(dsDT.Tables[0].Rows[0][0].ToString()) == int.Parse(plas.Total_times.ToString()) && float.Parse(dsDT.Tables[0].Rows[0][1].ToString()) == float.Parse(plas.Total_amount.ToString())) || 1==1)   //临时取消登出金额,次数比对限制
                                         {
                                             phan.Gen_Answer_XML(true, "", "");
                                             PacketLogout_answer.PacketLogout_answer plan = new PacketLogout_answer.PacketLogout_answer();
@@ -625,7 +625,7 @@ namespace WebService
                                     }
                                     else
                                     {
-                                        if (int.Parse(plas.Total_times.ToString()) == 0 && float.Parse(plas.Total_amount.ToString()) == 0)
+                                        if ((int.Parse(plas.Total_times.ToString()) == 0 && float.Parse(plas.Total_amount.ToString()) == 0) || 1==1)    //临时取消登出金额,次数比对限制
                                         {
                                             phan.Gen_Answer_XML(true, "", "");
                                             PacketLogout_answer.PacketLogout_answer plan = new PacketLogout_answer.PacketLogout_answer();
