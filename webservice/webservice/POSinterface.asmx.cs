@@ -104,6 +104,9 @@ namespace WebService
                     {
                         //用户登录
                         case "TRANS001":
+                            string strpKey = "";
+                            string strBatchNum = "";
+
                             if (PacketLogin_ask.PacketLogin_ask.setLogin(in_string, LinkString))
                             {
                                 PacketLogin_answer.PacketLogin_answer plan = new PacketLogin_answer.PacketLogin_answer();
@@ -113,24 +116,28 @@ namespace WebService
                                 XmlNode xn_login = xmlDoc.SelectSingleNode("Transaction/Transaction_Body");
                                 if (xn_login != null)
                                 {
-                                    string strSQL = "select * from skt17 where skf204=0 and skf203='" + phas.Terminal_eqno + "' ";
+                                    string strSQL = "select skf205,skf229 from skt17 where skf204=1 and skf203='" + phas.Terminal_eqno + "' ";
                                     DataSet DS;
                                     DS = MySqlHelper.MySqlHelper.Query(strSQL, LinkString);
-                                    if (DS.Tables[0].Rows.Count == 0 || 1==1)   //暂时取消未登出不能登入限制
+                                    if (DS.Tables[0].Rows.Count > 0)   //取消未登出不能登入限制
                                     {
+                                        strpKey = DS.Tables[0].Rows[0][0].ToString();
+                                        strBatchNum = DS.Tables[0].Rows[0][1].ToString();
+
                                         string epwd = phan.Request_time + plan.Delivery_man;
-                                        plan.ReadXML(xn_login, epwd, pKey);
+                                        plan.ReadXML(xn_login, epwd, pKey,strpKey,strBatchNum);
                                         str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS001", phan, plan);
 
-                                        strSQL = "insert into skt17(skf203,skf204,skf205,skf206,skf208) ";
-                                        strSQL = strSQL + "value('" + phas.Terminal_eqno + "',0,'" + plan.Public_key + "','" + System.DateTime.Now.ToString() + "','" + plan.Delivery_man + "') ";
-                                        DS = MySqlHelper.MySqlHelper.Query(strSQL, LinkString);
+                                        ///取消登录记录
+                                        //strSQL = "insert into skt17(skf203,skf204,skf205,skf206,skf208) ";
+                                        //strSQL = strSQL + "value('" + phas.Terminal_eqno + "',0,'" + plan.Public_key + "','" + System.DateTime.Now.ToString() + "','" + plan.Delivery_man + "') ";
+                                        //DS = MySqlHelper.MySqlHelper.Query(strSQL, LinkString);
                                     }
                                     else
                                     {
                                         phan.Gen_Answer_XML(false, "登录失败,未登出的POS设备在请求登录", "");
                                         string epwd = phan.Request_time + plan.Delivery_man;
-                                        plan.ReadXML(xn_login, epwd, pKey);
+                                        plan.ReadXML(xn_login, epwd, pKey, strpKey, strBatchNum);
                                         str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS001", phan, plan);
                                     }
                                 }
@@ -149,7 +156,7 @@ namespace WebService
                                 if (xn_login != null)
                                 {
                                     string epwd = phan.Request_time + plan.Delivery_man;
-                                    plan.ReadXML(xn_login, epwd, pKey);
+                                    plan.ReadXML(xn_login, epwd, pKey, strpKey, strBatchNum);
                                     str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS001", phan, plan);
                                 }
                                 else
@@ -170,7 +177,9 @@ namespace WebService
 
                             if (xn_trans004 != null)
                             {
-                                string strSQL = "select * from skt17 where skf204=0 and skf203='" + phas.Terminal_eqno + "' ";
+                                //取消登录判断
+                                //string strSQL = "select * from skt17 where skf204=0 and skf203='" + phas.Terminal_eqno + "' ";
+                                string strSQL = "select * from skt17 where skf203='" + phas.Terminal_eqno + "' ";
                                 DataSet DS;
                                 DS = MySqlHelper.MySqlHelper.Query(strSQL, LinkString);
                                 if (DS.Tables[0].Rows.Count == 1 && xn_trans004.SelectSingleNode("check_value").InnerText != null && xn_trans004.SelectSingleNode("check_value").InnerText != "")  //判断效验值,待补充
@@ -207,7 +216,6 @@ namespace WebService
                                                 string epwd = phan.Request_time + ptan.Pay_msg;
                                                 ptan.ReadXML(ptan, epwd, "交易成功");
                                                 str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS004", phan, ptan);
-
                                                 sql = "update skt14 set skf201=1 where skf158='" + ptas.Order_no + "' ";
                                                 int intds_sql = MySqlHelper.MySqlHelper.ExecuteSql(sql, LinkString);
                                             }
@@ -223,9 +231,11 @@ namespace WebService
                                                     {
                                                         DePass = dsInSql.Tables[0].Rows[0][0].ToString();
                                                         strUserID = dsInSql.Tables[0].Rows[0][1].ToString();
+                                                        //更新当面明文密码的加密密码
                                                         string strEnSql = "update skt4 set skf228='" + edc.GetXOR(edc.GetMD5(edc.GetASCII(DePass))) + "' where skf36='" + strUserID + "' ";
                                                         DataSet dsTemp = MySqlHelper.MySqlHelper.Query(strEnSql, LinkString);
                                                     }
+                                                    //判断加密后密码的匹配性
                                                     sql = "select * from skv1 where ((skvf7='" + ptas.Cardnum + "' and skvf10=1) or (skvf8='" + ptas.Cardnum + "' and skvf11=1) or (skvf20='" + ptas.Cardnum + "')) and skvf21='" + edc.DesDecrypt(ptas.Cardpass, strDepKey).Substring(0,8) + "' ";
                                                 }
                                                 else
@@ -386,8 +396,9 @@ namespace WebService
 
                             if (xn_trans005 != null)
                             {
-                                string strSQL = "select * from skt17 where skf204=0 and skf203='" + phas.Terminal_eqno + "' ";
-                                DataSet DS;
+                                //取消登录判断
+                                //string strSQL = "select * from skt17 where skf204=0 and skf203='" + phas.Terminal_eqno + "' ";
+                                string strSQL = "select * from skt17 where skf203='" + phas.Terminal_eqno + "' "; DataSet DS;
                                 DS = MySqlHelper.MySqlHelper.Query(strSQL, LinkString);
                                 if (DS.Tables[0].Rows.Count == 1 && xn_trans005.SelectSingleNode("check_value").InnerText != null && xn_trans005.SelectSingleNode("check_value").InnerText != "")  //判断效验值,待补充
                                 {

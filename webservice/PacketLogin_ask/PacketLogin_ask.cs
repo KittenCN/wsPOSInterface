@@ -56,32 +56,46 @@ namespace PacketLogin_ask
                 if (xn.SelectSingleNode("company_id") == null)
                 { pla.Company_id = "9999"; }
                 else
-                { pla.Company_id = xn.SelectSingleNode("company_id").InnerText; }                               
-                pla.Delivery_man = xn.SelectSingleNode("delivery_man").InnerText;
-                pla.Passwoed = xn.SelectSingleNode("password").InnerText;
-                pla.Check_value = xn.SelectSingleNode("check_value").InnerText;
-            }
-            else
-            {
-                return false;
-            }
-            if (pla.Check_value != null && pla.Check_value != "") //判断效验值,待补充
-            {
-                str_mysql = "select count(skf195) as coutnum from skt8 where skf195='" + pla.Delivery_man + "' and skf196='" + pla.Passwoed + "'";
-                DS = MySqlHelper.MySqlHelper.Query(str_mysql, LinkString);
-                if (DS.Tables[0].Rows[0].ItemArray[0].ToString() != null && int.Parse(DS.Tables[0].Rows[0].ItemArray[0].ToString()) > 0)
-                {
-                    return true;
-                }
+                { pla.Company_id = xn.SelectSingleNode("company_id").InnerText; }
+
+                if (xn.SelectSingleNode("delivery_man") == null)
+                { pla.Delivery_man = "9999"; }
                 else
-                {
-                    return false;
-                }
+                { pla.Delivery_man = xn.SelectSingleNode("delivery_man").InnerText; }
+
+                if (xn.SelectSingleNode("password") == null)
+                { pla.Passwoed = "9999"; }
+                else
+                { pla.Passwoed = xn.SelectSingleNode("password").InnerText; }
+
+                if (xn.SelectSingleNode("check_value") == null)
+                { pla.Check_value = "9999"; }
+                else
+                { pla.Check_value = xn.SelectSingleNode("check_value").InnerText; }
+
+                return true;
             }
             else
             {
                 return false;
             }
+            //if (pla.Check_value != null && pla.Check_value != "") //判断效验值,待补充
+            //{
+            //    str_mysql = "select count(skf195) as coutnum from skt8 where skf195='" + pla.Delivery_man + "' and skf196='" + pla.Passwoed + "'";
+            //    DS = MySqlHelper.MySqlHelper.Query(str_mysql, LinkString);
+            //    if (DS.Tables[0].Rows[0].ItemArray[0].ToString() != null && int.Parse(DS.Tables[0].Rows[0].ItemArray[0].ToString()) > 0)
+            //    {
+            //        return true;
+            //    }
+            //    else
+            //    {
+            //        return false;
+            //    }
+            //}
+            //else
+            //{
+            //    return false;
+            //}
         }
 
         //single login

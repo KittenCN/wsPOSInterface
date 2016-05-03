@@ -61,12 +61,14 @@ namespace XMLHelper
                         XmlElement delivery_info = GenClass.GenClass.GetXmlElement(xmlDocnew, "delivery_info", plan.Delivery_info);
                         XmlElement check_value = GenClass.GenClass.GetXmlElement(xmlDocnew, "check_value", plan.Check_value);
                         XmlElement public_key = GenClass.GenClass.GetXmlElement(xmlDocnew, "public_key", plan.Public_key);
+                        XmlElement chenk_batch_no = GenClass.GenClass.GetXmlElement(xmlDocnew, "chenk_batch_no", plan.Chenk_batch_no);
 
                         Transaction_Body.AppendChild(delivery_man);
                         Transaction_Body.AppendChild(company_id);
                         Transaction_Body.AppendChild(delivery_info);
                         Transaction_Body.AppendChild(check_value);
                         Transaction_Body.AppendChild(public_key);
+                        Transaction_Body.AppendChild(chenk_batch_no);
                         root.AppendChild(Transaction_Body);
 
                         StringWriter sw = new StringWriter();

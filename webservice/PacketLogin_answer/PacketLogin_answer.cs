@@ -58,7 +58,20 @@ namespace PacketLogin_answer
             set { public_key = value; }
         }
 
-        public void ReadXML(XmlNode xn, string epwd,string pKey)
+        private string chenk_batch_no;
+        public string Chenk_batch_no
+        {
+            get { return chenk_batch_no; }
+            set { chenk_batch_no = value; }
+        }
+
+        /// <summary>
+        /// 公钥生成及回传消息定义
+        /// </summary>
+        /// <param name="xn"></param>
+        /// <param name="epwd"></param>
+        /// <param name="pKey"></param>
+        public void ReadXML(XmlNode xn, string epwd,string pKey,string priKey,string BatchNum)
         {
             Delivery_man = xn.SelectSingleNode("delivery_man").InnerText;
             if(xn.SelectSingleNode("company_id")==null)
@@ -68,8 +81,10 @@ namespace PacketLogin_answer
             Delivery_info = "测试站点";
             MD5 md5Hash = MD5.Create();
             Check_value = GenClass.GenClass.GetMd5Hash(md5Hash, epwd);
-            EnDeCode.EnDeCode EDC = new EnDeCode.EnDeCode();
-            Public_key = EDC.DesEncrypt(EDC.GetHexString(16),pKey);
+            //EnDeCode.EnDeCode EDC = new EnDeCode.EnDeCode();
+            //Public_key = EDC.DesEncrypt(EDC.GetHexString(16),pKey);
+            Public_key = priKey;
+            Chenk_batch_no = BatchNum;
         }
 
     }
