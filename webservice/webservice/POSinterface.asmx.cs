@@ -58,12 +58,13 @@ namespace WebService
         public string POS_Interface(string in_string = "")
         {
             //读取配置文件config.xml
-            if (File.Exists(Server.MapPath("Config.xml")))
+            string strLocalAdd = "C:\\Config.xml";
+            if (File.Exists(strLocalAdd))
             {
                 try
                 {
                     XmlDocument xmlCon = new XmlDocument();
-                    xmlCon.Load(Server.MapPath("Config.xml"));
+                    xmlCon.Load(strLocalAdd);
                     XmlNode xnCon = xmlCon.SelectSingleNode("Config");
                     LinkString = xnCon.SelectSingleNode("LinkString").InnerText;
                     pKey = xnCon.SelectSingleNode("pKey").InnerText;
@@ -398,7 +399,8 @@ namespace WebService
                             {
                                 //取消登录判断
                                 //string strSQL = "select * from skt17 where skf204=0 and skf203='" + phas.Terminal_eqno + "' ";
-                                string strSQL = "select * from skt17 where skf203='" + phas.Terminal_eqno + "' "; DataSet DS;
+                                string strSQL = "select * from skt17 where skf203='" + phas.Terminal_eqno + "' ";
+                                DataSet DS;
                                 DS = MySqlHelper.MySqlHelper.Query(strSQL, LinkString);
                                 if (DS.Tables[0].Rows.Count == 1 && xn_trans005.SelectSingleNode("check_value").InnerText != null && xn_trans005.SelectSingleNode("check_value").InnerText != "")  //判断效验值,待补充
                                 {
@@ -427,25 +429,27 @@ namespace WebService
                                         if (int_result > 0)
                                         {
                                             string sql;
-                                            if (ptas.Pay_type == "03")
-                                            {
-                                                string strInSql = "select skfv12,skvf2 from skv1 where ((skvf7='" + ptas.Cardnum + "' and skvf10=1) or (skvf8='" + ptas.Cardnum + "' and skvf11=1) or (skvf20='" + ptas.Cardnum + "')) ";
-                                                string DePass = "";
-                                                string strUserID = "";
-                                                DataSet dsInSql = MySqlHelper.MySqlHelper.Query(strInSql, LinkString);
-                                                if (dsInSql.Tables[0].Rows.Count > 0)
-                                                {
-                                                    DePass = dsInSql.Tables[0].Rows[0][0].ToString();
-                                                    strUserID = dsInSql.Tables[0].Rows[0][1].ToString();
-                                                    string strEnSql = "update skt4 set skf228='" + edc.GetXOR(edc.GetMD5(edc.GetASCII(DePass))) + "' where skf36='" + strUserID + "' ";
-                                                    DataSet dsTemp = MySqlHelper.MySqlHelper.Query(strEnSql, LinkString);
-                                                }
-                                                sql = "select * from skv1 where ((skvf7='" + ptas.Cardnum + "' and skvf10=1) or (skvf8='" + ptas.Cardnum + "' and skvf11=1) or (skvf20='" + ptas.Cardnum + "')) and skvf21='" + edc.DesDecrypt(ptas.Cardpass, strDepKey) + "' ";
-                                            }
-                                            else
-                                            {
-                                                sql = "select * from skv1 where ((skvf7='" + ptas.Cardnum + "' and skvf10=1) or (skvf8='" + ptas.Cardnum + "' and skvf11=1) or (skvf20='" + ptas.Cardnum + "')) ";
-                                            }
+                                            //取消交易,不验证密码
+                                            sql = "select * from skv1 where ((skvf7='" + ptas.Cardnum + "' and skvf10=1) or (skvf8='" + ptas.Cardnum + "' and skvf11=1) or (skvf20='" + ptas.Cardnum + "')) ";
+                                            //if (ptas.Pay_type == "03")
+                                            //{
+                                            //    string strInSql = "select skfv12,skvf2 from skv1 where ((skvf7='" + ptas.Cardnum + "' and skvf10=1) or (skvf8='" + ptas.Cardnum + "' and skvf11=1) or (skvf20='" + ptas.Cardnum + "')) ";
+                                            //    string DePass = "";
+                                            //    string strUserID = "";
+                                            //    DataSet dsInSql = MySqlHelper.MySqlHelper.Query(strInSql, LinkString);
+                                            //    if (dsInSql.Tables[0].Rows.Count > 0)
+                                            //    {
+                                            //        DePass = dsInSql.Tables[0].Rows[0][0].ToString();
+                                            //        strUserID = dsInSql.Tables[0].Rows[0][1].ToString();
+                                            //        string strEnSql = "update skt4 set skf228='" + edc.GetXOR(edc.GetMD5(edc.GetASCII(DePass))) + "' where skf36='" + strUserID + "' ";
+                                            //        DataSet dsTemp = MySqlHelper.MySqlHelper.Query(strEnSql, LinkString);
+                                            //    }
+                                            //    sql = "select * from skv1 where ((skvf7='" + ptas.Cardnum + "' and skvf10=1) or (skvf8='" + ptas.Cardnum + "' and skvf11=1) or (skvf20='" + ptas.Cardnum + "')) and skvf21='" + edc.DesDecrypt(ptas.Cardpass, strDepKey) + "' ";
+                                            //}
+                                            //else
+                                            //{
+                                            //    sql = "select * from skv1 where ((skvf7='" + ptas.Cardnum + "' and skvf10=1) or (skvf8='" + ptas.Cardnum + "' and skvf11=1) or (skvf20='" + ptas.Cardnum + "')) ";
+                                            //}
                                             DataSet ds_sql = MySqlHelper.MySqlHelper.Query(sql, LinkString);
                                             if (ds_sql.Tables[0].Rows.Count > 0)
                                             {
