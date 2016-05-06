@@ -253,8 +253,9 @@ namespace WebService
                                                     if (ds_sql.Tables[0].Rows.Count > 0)
                                                     {
                                                         float floDis = float.Parse(ds_sql.Tables[0].Rows[0]["skf99"].ToString());
+                                                        float floNum = float.Parse(ds_sql.Tables[0].Rows[0]["skf230"].ToString());
                                                         //float floJF = ptas.Pay_amt * ((float.Parse("100") - floDis) / float.Parse("100"));
-                                                        float floJF = ptas.Pay_amt * floDis;
+                                                        float floJF = ptas.Pay_amt * floDis * floNum;
                                                         float floOldJF = 0;
                                                         string strOldMoneyid = "0";
                                                         sql = "select * from skt6 where skf91=1 and skf64='" + txtUserid + "' ";
@@ -289,8 +290,18 @@ namespace WebService
                                                                 if(dsSMS.Tables[0].Rows.Count>0)
                                                                 {
                                                                     SMS.SMS sms = new SMS.SMS();
-                                                                    sms.send_reg_sms(2, dsSMS.Tables[0].Rows[0].ItemArray[0].ToString(), floJF);
+                                                                    sms.send_reg_sms(1,2, dsSMS.Tables[0].Rows[0].ItemArray[0].ToString(), floJF);
                                                                 }                                                               
+                                                            }
+                                                            else
+                                                            {
+                                                                string strSMS = "select skf26 from skt3 where skf53=1 and skf20='" + txtUserid + "' ";
+                                                                DataSet dsSMS = MySqlHelper.MySqlHelper.Query(strSMS, LinkString);
+                                                                if (dsSMS.Tables[0].Rows.Count > 0)
+                                                                {
+                                                                    SMS.SMS sms = new SMS.SMS();
+                                                                    sms.send_reg_sms(2, 2, dsSMS.Tables[0].Rows[0].ItemArray[0].ToString(), floJF);
+                                                                }
                                                             }
 
                                                             sql = "update skt14 set skf201=1 where skf158='" + ptas.Order_no + "' ";

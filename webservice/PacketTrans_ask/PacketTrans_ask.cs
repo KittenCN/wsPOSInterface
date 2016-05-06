@@ -186,7 +186,7 @@ namespace PacketTrans_ask
             Check_value = xn.SelectSingleNode("check_value").InnerText;            
             if(xn.SelectSingleNode("cardnum")==null)
             {
-                Cardnum = "000000000000";
+                Cardnum = "NNNNNNNNNNNN";   //12个0会跳过密码验证
             }
             else
             {
@@ -194,7 +194,7 @@ namespace PacketTrans_ask
             }
             if(xn.SelectSingleNode("cardpass")==null)
             {
-                Cardpass = "000000000";
+                Cardpass = "NNNNNNNNNNNNNNNN";
             }
             else
             {
