@@ -39,7 +39,7 @@ namespace SMS
                         soap.Append("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
                         soap.Append("<soap:Envelope xmlns:soap12=\"http://www.w3.org/2003/05/soap-envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">");
                         soap.Append("<soap12:Body>");
-                        soap.Append("<SendSms xmlns=\"http://tempuri.org/\">");
+                        soap.Append("<SendSms xmlns=\"http://61.129.70.241/\">");
                         soap.Append("<userid>" + userid + "</userid>");
                         soap.Append("<account>" + account + "</account>");
                         soap.Append("<password>" + password + "</password>");
