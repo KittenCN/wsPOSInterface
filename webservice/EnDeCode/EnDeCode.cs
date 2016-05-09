@@ -136,7 +136,8 @@ namespace EnDeCode
             for (int i = 0; i < OriNum.Length; i++)
             {
                 int intCharNum = Convert.ToInt32(OriNum[i]);
-                strResult = strResult + "00" + intCharNum.ToString();
+                string strCharNum = Convert.ToString(intCharNum, 16);
+                strResult = strResult + "00" + strCharNum.ToString();
             }
             return strResult;
         }
@@ -204,6 +205,50 @@ namespace EnDeCode
                 }
             }
             return result;
+        }
+
+        public string GetFCS(string Value)
+        {
+            int i;
+            byte[] x1 = ASCIIEncoding.ASCII.GetBytes(Value.Substring(0, 8));
+            byte[] x2 = ASCIIEncoding.ASCII.GetBytes(Value.Substring(8, 8));
+            byte[] x3 = ASCIIEncoding.ASCII.GetBytes(Value.Substring(16, 8));
+            byte[] x4 = ASCIIEncoding.ASCII.GetBytes(Value.Substring(24, 8));
+            byte[] rBytes = FCS(x1, x2);
+            rBytes = FCS(rBytes, x3);
+            rBytes = FCS(rBytes, x4);
+            string strResult = "";
+            for (i = 0; i < 8; i++)
+            {
+                string strHexTemp = "";
+                if (Convert.ToString(Convert.ToInt32(rBytes[i]), 16).Length == 1)
+                {
+                    strHexTemp = "0" + Convert.ToString(Convert.ToInt32(rBytes[i]), 16);
+                }
+                else
+                {
+                    strHexTemp = Convert.ToString(Convert.ToInt32(rBytes[i]), 16);
+                }
+                strResult = strResult + strHexTemp;
+            }
+
+            //f = 0;
+            //for (i = 0; i < Value.Length; i += 2)
+            //{
+            //    x = ASCIIEncoding.ASCII.GetBytes(Value.Substring(i, 8));
+            //    f = f ^ (int)x[0];
+            //}
+            return strResult;
+        }
+
+        private byte[] FCS(byte[] x, byte[] y)
+        {
+            byte[] rBytes = new byte[x.Length];
+            for (int i = 0; i < x.Length; i++)
+            {
+                rBytes[i] = (byte)(x[i] ^ y[i]);
+            }
+            return rBytes;
         }
     }
 }

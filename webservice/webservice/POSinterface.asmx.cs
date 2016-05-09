@@ -233,11 +233,11 @@ namespace WebService
                                                         DePass = dsInSql.Tables[0].Rows[0][0].ToString();
                                                         strUserID = dsInSql.Tables[0].Rows[0][1].ToString();
                                                         //更新当面明文密码的加密密码
-                                                        string strEnSql = "update skt4 set skf228='" + edc.GetXOR(edc.GetMD5(edc.GetASCII(DePass))) + "' where skf36='" + strUserID + "' ";
+                                                        string strEnSql = "update skt4 set skf228='" + edc.GetFCS(edc.GetMD5(edc.GetASCII(DePass))) + "' where skf36='" + strUserID + "' ";
                                                         DataSet dsTemp = MySqlHelper.MySqlHelper.Query(strEnSql, LinkString);
                                                     }
                                                     //判断加密后密码的匹配性
-                                                    sql = "select * from skv1 where ((skvf7='" + ptas.Cardnum + "' and skvf10=1) or (skvf8='" + ptas.Cardnum + "' and skvf11=1) or (skvf20='" + ptas.Cardnum + "')) and skvf21='" + edc.DesDecrypt(ptas.Cardpass, strDepKey).Substring(0,8) + "' ";
+                                                    sql = "select * from skv1 where ((skvf7='" + ptas.Cardnum + "' and skvf10=1) or (skvf8='" + ptas.Cardnum + "' and skvf11=1) or (skvf20='" + ptas.Cardnum + "')) and skvf21='" + edc.DesDecrypt(ptas.Cardpass, strDepKey) + "' ";
                                                 }
                                                 else
                                                 {
@@ -255,7 +255,7 @@ namespace WebService
                                                         float floDis = float.Parse(ds_sql.Tables[0].Rows[0]["skf99"].ToString());
                                                         float floNum = float.Parse(ds_sql.Tables[0].Rows[0]["skf230"].ToString());
                                                         //float floJF = ptas.Pay_amt * ((float.Parse("100") - floDis) / float.Parse("100"));
-                                                        float floJF = ptas.Pay_amt * floDis * floNum;
+                                                        int intJF = Convert.ToInt32(ptas.Pay_amt * floDis * floNum);
                                                         float floOldJF = 0;
                                                         string strOldMoneyid = "0";
                                                         sql = "select * from skt6 where skf91=1 and skf64='" + txtUserid + "' ";
@@ -267,11 +267,11 @@ namespace WebService
                                                         }
                                                         if (ptas.Pay_type == "03")
                                                         {
-                                                            sql = "update skt6 set skf66=skf66-" + floJF + " where skf91=1 and skf64='" + txtUserid + "' ";
+                                                            sql = "update skt6 set skf66=skf66-" + intJF + " where skf91=1 and skf64='" + txtUserid + "' ";
                                                         }
                                                         else
                                                         {
-                                                            sql = "update skt6 set skf66=skf66+" + floJF + " where skf91=1 and skf64='" + txtUserid + "' ";
+                                                            sql = "update skt6 set skf66=skf66+" + intJF + " where skf91=1 and skf64='" + txtUserid + "' ";
                                                         }
 
                                                         int intds_sql = MySqlHelper.MySqlHelper.ExecuteSql(sql, LinkString);
@@ -290,7 +290,7 @@ namespace WebService
                                                                 if(dsSMS.Tables[0].Rows.Count>0)
                                                                 {
                                                                     SMS.SMS sms = new SMS.SMS();
-                                                                    sms.send_reg_sms(1,2, dsSMS.Tables[0].Rows[0].ItemArray[0].ToString(), floJF);
+                                                                    sms.send_reg_sms(1,2, dsSMS.Tables[0].Rows[0].ItemArray[0].ToString(), intJF);
                                                                 }                                                               
                                                             }
                                                             else
@@ -300,7 +300,7 @@ namespace WebService
                                                                 if (dsSMS.Tables[0].Rows.Count > 0)
                                                                 {
                                                                     SMS.SMS sms = new SMS.SMS();
-                                                                    sms.send_reg_sms(2, 2, dsSMS.Tables[0].Rows[0].ItemArray[0].ToString(), floJF);
+                                                                    sms.send_reg_sms(2, 2, dsSMS.Tables[0].Rows[0].ItemArray[0].ToString(), intJF);
                                                                 }
                                                             }
 
@@ -452,7 +452,7 @@ namespace WebService
                                             //    {
                                             //        DePass = dsInSql.Tables[0].Rows[0][0].ToString();
                                             //        strUserID = dsInSql.Tables[0].Rows[0][1].ToString();
-                                            //        string strEnSql = "update skt4 set skf228='" + edc.GetXOR(edc.GetMD5(edc.GetASCII(DePass))) + "' where skf36='" + strUserID + "' ";
+                                            //        string strEnSql = "update skt4 set skf228='" + edc.GetFCS(edc.GetMD5(edc.GetASCII(DePass))) + "' where skf36='" + strUserID + "' ";
                                             //        DataSet dsTemp = MySqlHelper.MySqlHelper.Query(strEnSql, LinkString);
                                             //    }
                                             //    sql = "select * from skv1 where ((skvf7='" + ptas.Cardnum + "' and skvf10=1) or (skvf8='" + ptas.Cardnum + "' and skvf11=1) or (skvf20='" + ptas.Cardnum + "')) and skvf21='" + edc.DesDecrypt(ptas.Cardpass, strDepKey) + "' ";
