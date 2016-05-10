@@ -119,6 +119,10 @@ namespace XMLHelper
                         str_result = sw.ToString();
                         break;
                     }
+                case "TRANS007":
+                    {
+                        goto case "TRANS004";
+                    }
                 default:
                     {
                         str_result = STDHead + PacketHead_Error + PacketBody_Error + STDFoot;
