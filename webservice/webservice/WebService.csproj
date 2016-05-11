@@ -150,6 +150,14 @@
       <Project>{9811ea59-1596-4ccf-990b-d9463bc32f9a}</Project>
       <Name>PacketTrans_ask</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PacketWash_answer\PacketWash_answer.csproj">
+      <Project>{3cf96050-dba0-4157-be83-7ed091b25c62}</Project>
+      <Name>PacketWash_answer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PacketWash_ask\PacketWash_ask.csproj">
+      <Project>{955bf422-eb52-4dc7-b965-78b1d05f5f8e}</Project>
+      <Name>PacketWash_ask</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SMS\SMS.csproj">
       <Project>{fe4c7eaa-c8a4-4818-a180-39442e964a7e}</Project>
       <Name>SMS</Name>

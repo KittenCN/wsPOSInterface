@@ -53,6 +53,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PacketLogout_answer", "Pack
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMS", "SMS\SMS.csproj", "{FE4C7EAA-C8A4-4818-A180-39442E964A7E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PacketWash_ask", "PacketWash_ask\PacketWash_ask.csproj", "{955BF422-EB52-4DC7-B965-78B1D05F5F8E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PacketWash_answer", "PacketWash_answer\PacketWash_answer.csproj", "{3CF96050-DBA0-4157-BE83-7ED091B25C62}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -123,6 +127,14 @@ Global
 		{FE4C7EAA-C8A4-4818-A180-39442E964A7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE4C7EAA-C8A4-4818-A180-39442E964A7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FE4C7EAA-C8A4-4818-A180-39442E964A7E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{955BF422-EB52-4DC7-B965-78B1D05F5F8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{955BF422-EB52-4DC7-B965-78B1D05F5F8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{955BF422-EB52-4DC7-B965-78B1D05F5F8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{955BF422-EB52-4DC7-B965-78B1D05F5F8E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CF96050-DBA0-4157-BE83-7ED091B25C62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CF96050-DBA0-4157-BE83-7ED091B25C62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CF96050-DBA0-4157-BE83-7ED091B25C62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CF96050-DBA0-4157-BE83-7ED091B25C62}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
