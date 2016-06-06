@@ -69,6 +69,10 @@
       <Project>{ef8ec880-6793-4994-ba17-d5e7d132215a}</Project>
       <Name>PacketTrans_answer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\PacketWash_answer\PacketWash_answer.csproj">
+      <Project>{3cf96050-dba0-4157-be83-7ed091b25c62}</Project>
+      <Name>PacketWash_answer</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

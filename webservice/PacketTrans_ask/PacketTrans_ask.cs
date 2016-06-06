@@ -174,7 +174,11 @@ namespace PacketTrans_ask
             { Net_type = int.Parse(xn.SelectSingleNode("net_type").InnerText); }
             Mid = xn.SelectSingleNode("mid").InnerText;
             Tid = xn.SelectSingleNode("tid").InnerText;
-            Cardacc_s = xn.SelectSingleNode("cardacc_s").InnerText;
+            //Cardacc_s = xn.SelectSingleNode("cardacc_s").InnerText;
+            if (xn.SelectSingleNode("Cardacc_s") == null)
+            { Cardacc_s = "000000000000"; }
+            else
+            { Cardacc_s = xn.SelectSingleNode("Cardacc_s").InnerText; }
             Amount = float.Parse(xn.SelectSingleNode("amount").InnerText);
             Pay_amt = float.Parse(xn.SelectSingleNode("pay_amt").InnerText);
             Discount = float.Parse(xn.SelectSingleNode("discount").InnerText);

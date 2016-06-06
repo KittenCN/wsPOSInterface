@@ -255,23 +255,30 @@ namespace WebService
                                                         float floDis = float.Parse(ds_sql.Tables[0].Rows[0]["skf99"].ToString());
                                                         float floNum = float.Parse(ds_sql.Tables[0].Rows[0]["skf230"].ToString());
                                                         //float floJF = ptas.Pay_amt * ((float.Parse("100") - floDis) / float.Parse("100"));
-                                                        int intJF = Convert.ToInt32(ptas.Pay_amt * floDis * floNum);
+                                                        //int intJF = Convert.ToInt32(ptas.Pay_amt * floDis * floNum);
+                                                        int intJF = 0;
                                                         float floOldJF = 0;
+                                                        float floNewJF = 0;
                                                         string strOldMoneyid = "0";
                                                         sql = "select * from skt6 where skf91=1 and skf64='" + txtUserid + "' ";
                                                         ds_sql = MySqlHelper.MySqlHelper.Query(sql, LinkString);
                                                         if (ds_sql.Tables[0].Rows.Count > 0)
                                                         {
-                                                            floOldJF = float.Parse(ds_sql.Tables[0].Rows[0]["skf66"].ToString());
+                                                            floOldJF = float.Parse(ds_sql.Tables[0].Rows[0]["skf67"].ToString());
                                                             strOldMoneyid = ds_sql.Tables[0].Rows[0]["skf63"].ToString();
                                                         }
+                                                        //修改当天生成积分至冻结积分,待夜间由基础服务统计
                                                         if (ptas.Pay_type == "03")
                                                         {
+                                                            intJF = Convert.ToInt32(ptas.Pay_amt * floNum);
+                                                            floOldJF = float.Parse(ds_sql.Tables[0].Rows[0]["skf66"].ToString());
                                                             sql = "update skt6 set skf66=skf66-" + intJF + " where skf91=1 and skf64='" + txtUserid + "' ";
                                                         }
                                                         else
                                                         {
-                                                            sql = "update skt6 set skf66=skf66+" + intJF + " where skf91=1 and skf64='" + txtUserid + "' ";
+                                                            intJF = Convert.ToInt32(ptas.Pay_amt * floDis);
+                                                            floOldJF = float.Parse(ds_sql.Tables[0].Rows[0]["skf67"].ToString());
+                                                            sql = "update skt6 set skf67=skf67+" + intJF + " where skf91=1 and skf64='" + txtUserid + "' ";
                                                         }
 
                                                         int intds_sql = MySqlHelper.MySqlHelper.ExecuteSql(sql, LinkString);
@@ -307,18 +314,26 @@ namespace WebService
                                                             sql = "update skt14 set skf201=1 where skf158='" + ptas.Order_no + "' ";
                                                             intds_sql = MySqlHelper.MySqlHelper.ExecuteSql(sql, LinkString);
 
-                                                            string strNewMoneyid = "";
-                                                            float floNewJF = 0;
+                                                            string strNewMoneyid = "";                                                          
                                                             sql = "select * from skt6 where skf91=1 and skf64='" + txtUserid + "' ";
                                                             ds_sql = MySqlHelper.MySqlHelper.Query(sql, LinkString);
                                                             if (ds_sql.Tables[0].Rows.Count > 0)
                                                             {
-                                                                floNewJF = float.Parse(ds_sql.Tables[0].Rows[0]["skf66"].ToString());
+                                                                //floNewJF = float.Parse(ds_sql.Tables[0].Rows[0]["skf67"].ToString());
                                                                 strNewMoneyid = ds_sql.Tables[0].Rows[0]["skf63"].ToString();
+                                                                if (ptas.Pay_type == "03")
+                                                                {
+                                                                    floNewJF = float.Parse(ds_sql.Tables[0].Rows[0]["skf66"].ToString());
+                                                                    sql = "insert into skt7(skf73,skf74,skf75,skf78,skf79,skf82,skf199,skf200) value('" + txtUserid + "','" + strOldMoneyid + "','" + strNewMoneyid + "','" + floOldJF + "','" + floNewJF + "','" + System.DateTime.Now.ToString() + "','" + ptas.Order_no + "',1) ";
+                                                                }
+                                                                else
+                                                                {
+                                                                    floNewJF = float.Parse(ds_sql.Tables[0].Rows[0]["skf67"].ToString());
+                                                                    sql = "insert into skt7(skf73,skf74,skf75,skf80,skf81,skf82,skf199,skf200) value('" + txtUserid + "','" + strOldMoneyid + "','" + strNewMoneyid + "','" + floOldJF + "','" + floNewJF + "','" + System.DateTime.Now.ToString() + "','" + ptas.Order_no + "',1) ";
+                                                                }
                                                             }
 
                                                             //插入历史
-                                                            sql = "insert into skt7(skf73,skf74,skf75,skf78,skf79,skf82,skf199,skf200) value('" + txtUserid + "','" + strOldMoneyid + "','" + strNewMoneyid + "','" + floOldJF + "','" + floNewJF + "','" + System.DateTime.Now.ToString() + "','" + ptas.Order_no + "',1) ";
                                                             intds_sql = MySqlHelper.MySqlHelper.ExecuteSql(sql, LinkString);
                                                         }
                                                         else
@@ -430,8 +445,8 @@ namespace WebService
                                     test_DS = MySqlHelper.MySqlHelper.Query(test_str_mysql, LinkString);
                                     if (test_DS.Tables[0].Rows.Count == 0)
                                     {
-                                        str_mysql = "insert into skt14(skf158,skf159,skf160,skf161,skf162,skf163,skf164,skf165,skf166,skf167,skf168,skf169,skf170,skf171,skf172,skf173,skf174,skf197,skf198) ";
-                                        str_mysql = str_mysql + " value('" + pwas.Order_no + "','" + pwas.Pay_type + "','" + pwas.Trans_type + "'," + pwas.Info_type;
+                                        str_mysql = "insert into skt14(skf158,skf232,skf159,skf160,skf161,skf162,skf163,skf164,skf165,skf166,skf167,skf168,skf169,skf170,skf171,skf172,skf173,skf174,skf197,skf198) ";
+                                        str_mysql = str_mysql + " value('" + pwas.Order_no + "','" + pwas.Order_no_washed +"','" + pwas.Pay_type + "','" + pwas.Trans_type + "'," + pwas.Info_type;
                                         str_mysql = str_mysql + "," + pwas.Net_type + ",'" + pwas.Mid + "','" + pwas.Tid + "','" + pwas.Cardacc_s + "'," + pwas.Amount;
                                         str_mysql = str_mysql + "," + pwas.Pay_amt + "," + pwas.Discount + ",'" + pwas.Pos_serial + "','" + pwas.Pos_setbat;
                                         str_mysql = str_mysql + "','" + pwas.Hostserial + "','" + pwas.Authcode + "','" + pwas.Transtime + "','" + pwas.Check_value + "','" + pwas.Cardnum + "','" + pwas.Cardpass + "')";
@@ -483,7 +498,7 @@ namespace WebService
                                                         floOldJF = float.Parse(ds_sql.Tables[0].Rows[0]["skf66"].ToString());
                                                         strOldMoneyid = ds_sql.Tables[0].Rows[0]["skf63"].ToString();
                                                     }
-                                                    sql = "select * from skt7 where skf200=1 and skf199='" + pwas.Order_no + "' ";
+                                                    sql = "select * from skt7 where skf200=1 and skf199='" + pwas.Order_no_washed + "' ";
                                                     ds_sql = MySqlHelper.MySqlHelper.Query(sql, LinkString);
                                                     if (ds_sql.Tables[0].Rows.Count > 0)
                                                     {
@@ -705,8 +720,8 @@ namespace WebService
                                     test_DS = MySqlHelper.MySqlHelper.Query(test_str_mysql, LinkString);
                                     if (test_DS.Tables[0].Rows.Count == 0)
                                     {
-                                        str_mysql = "insert into skt14(skf158,skf159,skf160,skf161,skf162,skf163,skf164,skf165,skf166,skf167,skf168,skf169,skf170,skf171,skf172,skf173,skf174,skf197,skf198) ";
-                                        str_mysql = str_mysql + " value('" + pwas.Order_no + "','" + pwas.Pay_type + "','" + pwas.Trans_type + "'," + pwas.Info_type;
+                                        str_mysql = "insert into skt14(skf158,skf232,skf159,skf160,skf161,skf162,skf163,skf164,skf165,skf166,skf167,skf168,skf169,skf170,skf171,skf172,skf173,skf174,skf197,skf198) ";
+                                        str_mysql = str_mysql + " value('" + pwas.Order_no + "','" + pwas.Order_no_washed + "','" + pwas.Pay_type + "','" + pwas.Trans_type + "'," + pwas.Info_type;
                                         str_mysql = str_mysql + "," + pwas.Net_type + ",'" + pwas.Mid + "','" + pwas.Tid + "','" + pwas.Cardacc_s + "'," + pwas.Amount;
                                         str_mysql = str_mysql + "," + pwas.Pay_amt + "," + pwas.Discount + ",'" + pwas.Pos_serial + "','" + pwas.Pos_setbat;
                                         str_mysql = str_mysql + "','" + pwas.Hostserial + "','" + pwas.Authcode + "','" + pwas.Transtime + "','" + pwas.Check_value + "','" + pwas.Cardnum + "','" + pwas.Cardpass + "')";

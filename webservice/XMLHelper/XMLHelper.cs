@@ -99,7 +99,19 @@ namespace XMLHelper
                     }
                 case "TRANS005":
                     {
-                        goto case "TRANS004";
+                        //PacketTrans_answer.PacketTrans_answer ptan = an as PacketTrans_answer.PacketTrans_answer;
+                        PacketWash_answer.PacketWash_answer pwas = an as PacketWash_answer.PacketWash_answer;
+                        XmlElement pay_msg = GenClass.GenClass.GetXmlElement(xmlDocnew, "pay_msg", pwas.Pay_msg);
+                        XmlElement check_value = GenClass.GenClass.GetXmlElement(xmlDocnew, "check_value", pwas.Check_value);
+
+                        Transaction_Body.AppendChild(pay_msg);
+                        Transaction_Body.AppendChild(check_value);
+                        root.AppendChild(Transaction_Body);
+
+                        StringWriter sw = new StringWriter();
+                        xmlDocnew.Save(sw);
+                        str_result = sw.ToString();
+                        break;
                     }
                 case "TRANS006":
                     {
@@ -121,7 +133,7 @@ namespace XMLHelper
                     }
                 case "TRANS007":
                     {
-                        goto case "TRANS004";
+                        goto case "TRANS005";
                     }
                 default:
                     {
