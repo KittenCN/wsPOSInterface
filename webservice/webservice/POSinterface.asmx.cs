@@ -310,7 +310,7 @@ namespace WebService
                                                                     sms.send_reg_sms(2, 2, dsSMS.Tables[0].Rows[0].ItemArray[0].ToString(), intJF);
                                                                 }
                                                             }
-
+                                                            //skf201 0:异常   1:正常    2:冲正    3:撤销
                                                             sql = "update skt14 set skf201=1 where skf158='" + ptas.Order_no + "' ";
                                                             intds_sql = MySqlHelper.MySqlHelper.ExecuteSql(sql, LinkString);
 
@@ -436,10 +436,7 @@ namespace WebService
                                     string str_mysql = "";
                                     string strEnpKey = DS.Tables[0].Rows[0]["skf205"].ToString();
                                     string strDepKey = edc.DesDecrypt(strEnpKey, pKey);
-
-
                                     pwas.ReadXML(xn_trans005);
-
                                     string test_str_mysql = "select * from skt14 where skf160='02' and skf158='" + pwas.Order_no + "'";
                                     DataSet test_DS;
                                     test_DS = MySqlHelper.MySqlHelper.Query(test_str_mysql, LinkString);
@@ -488,6 +485,7 @@ namespace WebService
                                                 {
                                                     float floNewJF = 0;
                                                     float floOldJF = 0;
+                                                    float floOldCurJF = 0;
                                                     string strOldMoneyid = "0";
                                                     //string strNewMoneyid = "0";
 
@@ -496,18 +494,22 @@ namespace WebService
                                                     if (ds_sql.Tables[0].Rows.Count > 0)
                                                     {
                                                         floOldJF = float.Parse(ds_sql.Tables[0].Rows[0]["skf66"].ToString());
+                                                        floOldCurJF = float.Parse(ds_sql.Tables[0].Rows[0]["skt67"].ToString());
                                                         strOldMoneyid = ds_sql.Tables[0].Rows[0]["skf63"].ToString();
                                                     }
+                                                    sql = "select * from skt14 where skf158='" + pwas.Order_no_washed + "' ";
+                                                    DataSet dsData = MySqlHelper.MySqlHelper.Query(sql, LinkString);
                                                     sql = "select * from skt7 where skf200=1 and skf199='" + pwas.Order_no_washed + "' ";
                                                     ds_sql = MySqlHelper.MySqlHelper.Query(sql, LinkString);
-                                                    if (ds_sql.Tables[0].Rows.Count > 0)
+                                                    if (dsData.Tables[0].Rows[0]["skf159"].ToString() == "03")    
                                                     {
-                                                        float floOriNewJF = float.Parse(ds_sql.Tables[0].Rows[0]["skf77"].ToString());
-                                                        float floOriOldJF = float.Parse(ds_sql.Tables[0].Rows[0]["skf76"].ToString());
-                                                        if (floOldJF < (floOriNewJF - floOriOldJF))
+                                                        float floOriNewJF = float.Parse(ds_sql.Tables[0].Rows[0]["skf79"].ToString());
+                                                        float floOriOldJF = float.Parse(ds_sql.Tables[0].Rows[0]["skf78"].ToString());
+                                                        if (ds_sql.Tables[0].Rows.Count > 0)
                                                         {
-                                                            floNewJF = floOldJF - (floOriNewJF - floOriOldJF);
-                                                            sql = "update skt6 set skf66=skf66+" + floNewJF + " where skf91=1 and skf64='" + txtUserid + "' ";
+                                                            //floNewJF = floOldJF - (floOriNewJF - floOriOldJF);
+                                                            floNewJF = floOriNewJF - floOriOldJF;
+                                                            sql = "update skt6 set skf66=skf66-" + floNewJF + " where skf91=1 and skf64='" + txtUserid + "' ";
                                                             int intds_sql = MySqlHelper.MySqlHelper.ExecuteSql(sql, LinkString);
                                                             if (intds_sql > 0)
                                                             {
@@ -518,7 +520,10 @@ namespace WebService
                                                                 pwan.ReadXML(pwan, epwd, "交易成功");
                                                                 str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS005", phan, pwan);
 
-                                                                sql = "update skt14 set skf201=2 where skf158='" + pwas.Order_no + "' ";
+                                                                sql = "update skt14 set skf201=1 where skf158='" + pwas.Order_no + "' ";
+                                                                intds_sql = MySqlHelper.MySqlHelper.ExecuteSql(sql, LinkString);
+
+                                                                sql = "update skt14 set skf201=2 where skf158='" + pwas.Order_no_washed + "' ";
                                                                 intds_sql = MySqlHelper.MySqlHelper.ExecuteSql(sql, LinkString);
 
                                                                 //插入历史
@@ -527,7 +532,7 @@ namespace WebService
                                                             }
                                                             else
                                                             {
-                                                                phan.Gen_Answer_XML(false, "交易失败,未知错误,联系管理员", "");
+                                                                phan.Gen_Answer_XML(true, "", "交易失败,未知错误,联系管理员");
                                                                 //PacketTrans_answer.PacketTrans_answer ptan = new PacketTrans_answer.PacketTrans_answer();
                                                                 PacketWash_answer.PacketWash_answer pwan = new PacketWash_answer.PacketWash_answer();
                                                                 string epwd = phan.Request_time + pwan.Pay_msg;
@@ -537,7 +542,7 @@ namespace WebService
                                                         }
                                                         else
                                                         {
-                                                            phan.Gen_Answer_XML(false, "交易失败,积分不足", "");
+                                                            phan.Gen_Answer_XML(true, "", "交易失败,积分不足");
                                                             //PacketTrans_answer.PacketTrans_answer ptan = new PacketTrans_answer.PacketTrans_answer();
                                                             PacketWash_answer.PacketWash_answer pwan = new PacketWash_answer.PacketWash_answer();
                                                             string epwd = phan.Request_time + pwan.Pay_msg;
@@ -547,18 +552,57 @@ namespace WebService
                                                     }
                                                     else
                                                     {
-                                                        phan.Gen_Answer_XML(false, "交易失败,交易号未授权", "");
-                                                        //PacketTrans_answer.PacketTrans_answer ptan = new PacketTrans_answer.PacketTrans_answer();
-                                                        PacketWash_answer.PacketWash_answer pwan = new PacketWash_answer.PacketWash_answer();
-                                                        string epwd = phan.Request_time + pwan.Pay_msg;
-                                                        pwan.ReadXML(pwan, epwd, "交易失败,交易号未授权");
-                                                        str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS005", phan, pwan);
-                                                    }
+                                                        float floOriNewJF = float.Parse(ds_sql.Tables[0].Rows[0]["skf81"].ToString());
+                                                        float floOriOldJF = float.Parse(ds_sql.Tables[0].Rows[0]["skf80"].ToString());
+                                                        if (ds_sql.Tables[0].Rows.Count > 0)
+                                                        {
+                                                            //floNewJF = floOldJF - (floOriNewJF - floOriOldJF);
+                                                            floNewJF = floOriNewJF - floOriOldJF;
+                                                            sql = "update skt6 set skf67=skf67-" + floNewJF + " where skf91=1 and skf64='" + txtUserid + "' ";
+                                                            int intds_sql = MySqlHelper.MySqlHelper.ExecuteSql(sql, LinkString);
+                                                            if (intds_sql > 0)
+                                                            {
+                                                                phan.Gen_Answer_XML(true, "", "");
+                                                                //PacketTrans_answer.PacketTrans_answer ptan = new PacketTrans_answer.PacketTrans_answer();
+                                                                PacketWash_answer.PacketWash_answer pwan = new PacketWash_answer.PacketWash_answer();
+                                                                string epwd = phan.Request_time + pwan.Pay_msg;
+                                                                pwan.ReadXML(pwan, epwd, "交易成功");
+                                                                str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS005", phan, pwan);
 
+                                                                sql = "update skt14 set skf201=1 where skf158='" + pwas.Order_no + "' ";
+                                                                intds_sql = MySqlHelper.MySqlHelper.ExecuteSql(sql, LinkString);
+
+                                                                sql = "update skt14 set skf201=2 where skf158='" + pwas.Order_no_washed + "' ";
+                                                                intds_sql = MySqlHelper.MySqlHelper.ExecuteSql(sql, LinkString);
+
+                                                                //插入历史
+                                                                sql = "insert into skt7(skf73,skf74,skf75,skf80,skf81,skf82,skf199,skf200) value('" + txtUserid + "','" + strOldMoneyid + "','" + strOldMoneyid + "','" + floOldJF + "','" + floNewJF + "','" + System.DateTime.Now.ToString() + "','" + pwas.Order_no + "',0) ";
+                                                                intds_sql = MySqlHelper.MySqlHelper.ExecuteSql(sql, LinkString);
+                                                            }
+                                                            else
+                                                            {
+                                                                phan.Gen_Answer_XML(true, "", "交易失败,未知错误,联系管理员");
+                                                                //PacketTrans_answer.PacketTrans_answer ptan = new PacketTrans_answer.PacketTrans_answer();
+                                                                PacketWash_answer.PacketWash_answer pwan = new PacketWash_answer.PacketWash_answer();
+                                                                string epwd = phan.Request_time + pwan.Pay_msg;
+                                                                pwan.ReadXML(pwan, epwd, "交易失败,未知错误,联系管理员");
+                                                                str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS005", phan, pwan);
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            phan.Gen_Answer_XML(true, "", "交易失败,积分不足");
+                                                            //PacketTrans_answer.PacketTrans_answer ptan = new PacketTrans_answer.PacketTrans_answer();
+                                                            PacketWash_answer.PacketWash_answer pwan = new PacketWash_answer.PacketWash_answer();
+                                                            string epwd = phan.Request_time + pwan.Pay_msg;
+                                                            pwan.ReadXML(pwan, epwd, "交易失败,积分不足");
+                                                            str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS005", phan, pwan);
+                                                        }
+                                                    }
                                                 }
                                                 else
                                                 {
-                                                    phan.Gen_Answer_XML(false, "交易失败,POS机未授权", "");
+                                                    phan.Gen_Answer_XML(true, "", "交易失败,POS机未授权");
                                                     //PacketTrans_answer.PacketTrans_answer ptan = new PacketTrans_answer.PacketTrans_answer();
                                                     PacketWash_answer.PacketWash_answer pwan = new PacketWash_answer.PacketWash_answer();
                                                     string epwd = phan.Request_time + pwan.Pay_msg;
@@ -568,7 +612,7 @@ namespace WebService
                                             }
                                             else
                                             {
-                                                phan.Gen_Answer_XML(false, "交易失败,卡号密码错误", "");
+                                                phan.Gen_Answer_XML(true, "", "交易失败,卡号密码错误");
                                                 //PacketTrans_answer.PacketTrans_answer ptan = new PacketTrans_answer.PacketTrans_answer();
                                                 PacketWash_answer.PacketWash_answer pwan = new PacketWash_answer.PacketWash_answer();
                                                 string epwd = phan.Request_time + pwan.Pay_msg;
@@ -578,7 +622,7 @@ namespace WebService
                                         }
                                         else
                                         {
-                                            phan.Gen_Answer_XML(false, "交易失败,未知错误,联系管理员", "");
+                                            phan.Gen_Answer_XML(true, "", "交易失败,未知错误,联系管理员");
                                             //PacketTrans_answer.PacketTrans_answer ptan = new PacketTrans_answer.PacketTrans_answer();
                                             PacketWash_answer.PacketWash_answer pwan = new PacketWash_answer.PacketWash_answer();
                                             string epwd = phan.Request_time + pwan.Pay_msg;
@@ -588,7 +632,7 @@ namespace WebService
                                     }
                                     else
                                     {
-                                        phan.Gen_Answer_XML(false, "交易失败,交易号重复", "");
+                                        phan.Gen_Answer_XML(true, "", "交易失败,交易号重复");
                                         //PacketTrans_answer.PacketTrans_answer ptan = new PacketTrans_answer.PacketTrans_answer();
                                         PacketWash_answer.PacketWash_answer pwan = new PacketWash_answer.PacketWash_answer();
                                         string epwd = phan.Request_time + pwan.Pay_msg;
@@ -598,7 +642,7 @@ namespace WebService
                                 }
                                 else
                                 {
-                                    phan.Gen_Answer_XML(false, "交易失败,效验错误或POS设备未登记", "");
+                                    phan.Gen_Answer_XML(true, "", "交易失败,效验错误或POS设备未登记");
                                     //PacketTrans_answer.PacketTrans_answer ptan = new PacketTrans_answer.PacketTrans_answer();
                                     PacketWash_answer.PacketWash_answer pwan = new PacketWash_answer.PacketWash_answer();
                                     string epwd = phan.Request_time + pwan.Pay_msg;
@@ -608,7 +652,7 @@ namespace WebService
                             }
                             else
                             {
-                                phan.Gen_Answer_XML(false, "交易失败,数据包传输错误", "");
+                                phan.Gen_Answer_XML(true, "", "交易失败,数据包传输错误");
                                 //PacketTrans_answer.PacketTrans_answer ptan = new PacketTrans_answer.PacketTrans_answer();
                                 PacketWash_answer.PacketWash_answer pwan = new PacketWash_answer.PacketWash_answer();
                                 string epwd = phan.Request_time + pwan.Pay_msg;
@@ -763,6 +807,7 @@ namespace WebService
                                                 {
                                                     float floNewJF = 0;
                                                     float floOldJF = 0;
+                                                    float floOldCurJF = 0;
                                                     string strOldMoneyid = "0";
                                                     //string strNewMoneyid = "0";
 
@@ -771,28 +816,36 @@ namespace WebService
                                                     if (ds_sql.Tables[0].Rows.Count > 0)
                                                     {
                                                         floOldJF = float.Parse(ds_sql.Tables[0].Rows[0]["skf66"].ToString());
+                                                        floOldCurJF = float.Parse(ds_sql.Tables[0].Rows[0]["skt67"].ToString());
                                                         strOldMoneyid = ds_sql.Tables[0].Rows[0]["skf63"].ToString();
                                                     }
-                                                    sql = "select * from skt7 where skf200=1 and skf199='" + pwas.Order_no + "' ";
+                                                    sql = "select * from skt14 where skf158='" + pwas.Order_no_washed + "' ";
+                                                    DataSet dsData = MySqlHelper.MySqlHelper.Query(sql, LinkString);
+                                                    sql = "select * from skt7 where skf200=1 and skf199='" + pwas.Order_no_washed + "' ";
                                                     ds_sql = MySqlHelper.MySqlHelper.Query(sql, LinkString);
-                                                    if (ds_sql.Tables[0].Rows.Count > 0)
+                                                    if (dsData.Tables[0].Rows[0]["skf159"].ToString() == "03")
                                                     {
-                                                        float floOriNewJF = float.Parse(ds_sql.Tables[0].Rows[0]["skf77"].ToString());
-                                                        float floOriOldJF = float.Parse(ds_sql.Tables[0].Rows[0]["skf76"].ToString());
-                                                        if (floOldJF < (floOriNewJF - floOriOldJF))
+                                                        float floOriNewJF = float.Parse(ds_sql.Tables[0].Rows[0]["skf79"].ToString());
+                                                        float floOriOldJF = float.Parse(ds_sql.Tables[0].Rows[0]["skf78"].ToString());
+                                                        if (ds_sql.Tables[0].Rows.Count > 0)
                                                         {
-                                                            floNewJF = floOldJF - (floOriNewJF - floOriOldJF);
-                                                            sql = "update skt6 set skf66=skf66+" + floNewJF + " where skf91=1 and skf64='" + txtUserid + "' ";
+                                                            //floNewJF = floOldJF - (floOriNewJF - floOriOldJF);
+                                                            floNewJF = floOriNewJF - floOriOldJF;
+                                                            sql = "update skt6 set skf66=skf66-" + floNewJF + " where skf91=1 and skf64='" + txtUserid + "' ";
                                                             int intds_sql = MySqlHelper.MySqlHelper.ExecuteSql(sql, LinkString);
                                                             if (intds_sql > 0)
                                                             {
                                                                 phan.Gen_Answer_XML(true, "", "");
-                                                                PacketTrans_answer.PacketTrans_answer ptan = new PacketTrans_answer.PacketTrans_answer();
-                                                                string epwd = phan.Request_time + ptan.Pay_msg;
-                                                                ptan.ReadXML(ptan, epwd, "交易成功");
-                                                                str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS007", phan, ptan);
+                                                                //PacketTrans_answer.PacketTrans_answer ptan = new PacketTrans_answer.PacketTrans_answer();
+                                                                PacketWash_answer.PacketWash_answer pwan = new PacketWash_answer.PacketWash_answer();
+                                                                string epwd = phan.Request_time + pwan.Pay_msg;
+                                                                pwan.ReadXML(pwan, epwd, "交易成功");
+                                                                str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS005", phan, pwan);
 
-                                                                sql = "update skt14 set skf201=2 where skf158='" + pwas.Order_no + "' ";
+                                                                sql = "update skt14 set skf201=1 where skf158='" + pwas.Order_no + "' ";
+                                                                intds_sql = MySqlHelper.MySqlHelper.ExecuteSql(sql, LinkString);
+
+                                                                sql = "update skt14 set skf201=3 where skf158='" + pwas.Order_no_washed + "' ";
                                                                 intds_sql = MySqlHelper.MySqlHelper.ExecuteSql(sql, LinkString);
 
                                                                 //插入历史
@@ -806,7 +859,7 @@ namespace WebService
                                                                 PacketWash_answer.PacketWash_answer pwan = new PacketWash_answer.PacketWash_answer();
                                                                 string epwd = phan.Request_time + pwan.Pay_msg;
                                                                 pwan.ReadXML(pwan, epwd, "交易失败,未知错误,联系管理员");
-                                                                str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS007", phan, pwan);
+                                                                str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS005", phan, pwan);
                                                             }
                                                         }
                                                         else
@@ -816,19 +869,58 @@ namespace WebService
                                                             PacketWash_answer.PacketWash_answer pwan = new PacketWash_answer.PacketWash_answer();
                                                             string epwd = phan.Request_time + pwan.Pay_msg;
                                                             pwan.ReadXML(pwan, epwd, "交易失败,积分不足");
-                                                            str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS007", phan, pwan);
+                                                            str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS005", phan, pwan);
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        phan.Gen_Answer_XML(false, "交易失败,交易号未授权", "");
-                                                        //PacketTrans_answer.PacketTrans_answer ptan = new PacketTrans_answer.PacketTrans_answer();
-                                                        PacketWash_answer.PacketWash_answer pwan = new PacketWash_answer.PacketWash_answer();
-                                                        string epwd = phan.Request_time + pwan.Pay_msg;
-                                                        pwan.ReadXML(pwan, epwd, "交易失败,交易号未授权");
-                                                        str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS007", phan, pwan);
-                                                    }
+                                                        float floOriNewJF = float.Parse(ds_sql.Tables[0].Rows[0]["skf81"].ToString());
+                                                        float floOriOldJF = float.Parse(ds_sql.Tables[0].Rows[0]["skf80"].ToString());
+                                                        if (ds_sql.Tables[0].Rows.Count > 0)
+                                                        {
+                                                            //floNewJF = floOldJF - (floOriNewJF - floOriOldJF);
+                                                            floNewJF = floOriNewJF - floOriOldJF;
+                                                            sql = "update skt6 set skf67=skf67-" + floNewJF + " where skf91=1 and skf64='" + txtUserid + "' ";
+                                                            int intds_sql = MySqlHelper.MySqlHelper.ExecuteSql(sql, LinkString);
+                                                            if (intds_sql > 0)
+                                                            {
+                                                                phan.Gen_Answer_XML(true, "", "");
+                                                                //PacketTrans_answer.PacketTrans_answer ptan = new PacketTrans_answer.PacketTrans_answer();
+                                                                PacketWash_answer.PacketWash_answer pwan = new PacketWash_answer.PacketWash_answer();
+                                                                string epwd = phan.Request_time + pwan.Pay_msg;
+                                                                pwan.ReadXML(pwan, epwd, "交易成功");
+                                                                str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS005", phan, pwan);
 
+                                                                sql = "update skt14 set skf201=1 where skf158='" + pwas.Order_no + "' ";
+                                                                intds_sql = MySqlHelper.MySqlHelper.ExecuteSql(sql, LinkString);
+
+                                                                sql = "update skt14 set skf201=2 where skf158='" + pwas.Order_no_washed + "' ";
+                                                                intds_sql = MySqlHelper.MySqlHelper.ExecuteSql(sql, LinkString);
+
+                                                                //插入历史
+                                                                sql = "insert into skt7(skf73,skf74,skf75,skf80,skf81,skf82,skf199,skf200) value('" + txtUserid + "','" + strOldMoneyid + "','" + strOldMoneyid + "','" + floOldJF + "','" + floNewJF + "','" + System.DateTime.Now.ToString() + "','" + pwas.Order_no + "',0) ";
+                                                                intds_sql = MySqlHelper.MySqlHelper.ExecuteSql(sql, LinkString);
+                                                            }
+                                                            else
+                                                            {
+                                                                phan.Gen_Answer_XML(false, "交易失败,未知错误,联系管理员", "");
+                                                                //PacketTrans_answer.PacketTrans_answer ptan = new PacketTrans_answer.PacketTrans_answer();
+                                                                PacketWash_answer.PacketWash_answer pwan = new PacketWash_answer.PacketWash_answer();
+                                                                string epwd = phan.Request_time + pwan.Pay_msg;
+                                                                pwan.ReadXML(pwan, epwd, "交易失败,未知错误,联系管理员");
+                                                                str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS005", phan, pwan);
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            phan.Gen_Answer_XML(false, "交易失败,积分不足", "");
+                                                            //PacketTrans_answer.PacketTrans_answer ptan = new PacketTrans_answer.PacketTrans_answer();
+                                                            PacketWash_answer.PacketWash_answer pwan = new PacketWash_answer.PacketWash_answer();
+                                                            string epwd = phan.Request_time + pwan.Pay_msg;
+                                                            pwan.ReadXML(pwan, epwd, "交易失败,积分不足");
+                                                            str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS005", phan, pwan);
+                                                        }
+                                                    }
                                                 }
                                                 else
                                                 {
@@ -837,7 +929,7 @@ namespace WebService
                                                     PacketWash_answer.PacketWash_answer pwan = new PacketWash_answer.PacketWash_answer();
                                                     string epwd = phan.Request_time + pwan.Pay_msg;
                                                     pwan.ReadXML(pwan, epwd, "交易失败,POS机未授权");
-                                                    str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS007", phan, pwan);
+                                                    str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS005", phan, pwan);
                                                 }
                                             }
                                             else
@@ -847,7 +939,7 @@ namespace WebService
                                                 PacketWash_answer.PacketWash_answer pwan = new PacketWash_answer.PacketWash_answer();
                                                 string epwd = phan.Request_time + pwan.Pay_msg;
                                                 pwan.ReadXML(pwan, epwd, "交易失败,卡号密码错误");
-                                                str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS007", phan, pwan);
+                                                str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS005", phan, pwan);
                                             }
                                         }
                                         else
@@ -857,7 +949,7 @@ namespace WebService
                                             PacketWash_answer.PacketWash_answer pwan = new PacketWash_answer.PacketWash_answer();
                                             string epwd = phan.Request_time + pwan.Pay_msg;
                                             pwan.ReadXML(pwan, epwd, "交易失败,未知错误,联系管理员");
-                                            str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS007", phan, pwan);
+                                            str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS005", phan, pwan);
                                         }
                                     }
                                     else
@@ -867,7 +959,7 @@ namespace WebService
                                         PacketWash_answer.PacketWash_answer pwan = new PacketWash_answer.PacketWash_answer();
                                         string epwd = phan.Request_time + pwan.Pay_msg;
                                         pwan.ReadXML(pwan, epwd, "交易失败,交易号重复");
-                                        str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS007", phan, pwan);
+                                        str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS005", phan, pwan);
                                     }
                                 }
                                 else
@@ -877,7 +969,7 @@ namespace WebService
                                     PacketWash_answer.PacketWash_answer pwan = new PacketWash_answer.PacketWash_answer();
                                     string epwd = phan.Request_time + pwan.Pay_msg;
                                     pwan.ReadXML(pwan, epwd, "交易失败,效验错误或POS设备未登记");
-                                    str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS007", phan, pwan);
+                                    str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS005", phan, pwan);
                                 }
                             }
                             else
@@ -887,7 +979,7 @@ namespace WebService
                                 PacketWash_answer.PacketWash_answer pwan = new PacketWash_answer.PacketWash_answer();
                                 string epwd = phan.Request_time + pwan.Pay_msg;
                                 pwan.ReadXML(pwan, epwd, "交易失败,数据包传输错误");
-                                str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS007", phan, pwan);
+                                str_result = XMLHelper.XMLHelper.Create_XML_Head("TRANS005", phan, pwan);
                             }
                             break;
 
