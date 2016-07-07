@@ -63,6 +63,14 @@ namespace PacketTrans_ask
             set { tid = value; }
         }
 
+        //交易终端号
+        private string posid;
+        public string Posid
+        {
+            get { return posid; }
+            set { posid = value; }
+        }
+
         //交易卡号
         private string cardacc_s;
         public string Cardacc_s
@@ -174,6 +182,7 @@ namespace PacketTrans_ask
             { Net_type = int.Parse(xn.SelectSingleNode("net_type").InnerText); }
             Mid = xn.SelectSingleNode("mid").InnerText;
             Tid = xn.SelectSingleNode("tid").InnerText;
+            Posid = xn.SelectSingleNode("posid").InnerText;
             //Cardacc_s = xn.SelectSingleNode("cardacc_s").InnerText;
             if (xn.SelectSingleNode("Cardacc_s") == null)
             { Cardacc_s = "000000000000"; }

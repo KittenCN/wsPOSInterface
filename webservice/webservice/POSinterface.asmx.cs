@@ -198,11 +198,11 @@ namespace WebService
                                     test_DS = MySqlHelper.MySqlHelper.Query(test_str_mysql, LinkString);
                                     if (test_DS.Tables[0].Rows.Count == 0)
                                     {
-                                        str_mysql = "insert into skt14(skf158,skf159,skf160,skf161,skf162,skf163,skf164,skf165,skf166,skf167,skf168,skf169,skf170,skf171,skf172,skf173,skf174,skf197,skf198) ";
+                                        str_mysql = "insert into skt14(skf158,skf159,skf160,skf161,skf162,skf163,skf164,skf165,skf166,skf167,skf168,skf169,skf170,skf171,skf172,skf173,skf174,skf197,skf198,skf233) ";
                                         str_mysql = str_mysql + " value('" + ptas.Order_no + "','" + ptas.Pay_type + "','" + ptas.Trans_type + "'," + ptas.Info_type;
                                         str_mysql = str_mysql + "," + ptas.Net_type + ",'" + ptas.Mid + "','" + ptas.Tid + "','" + ptas.Cardacc_s + "'," + ptas.Amount;
                                         str_mysql = str_mysql + "," + ptas.Pay_amt + "," + ptas.Discount + ",'" + ptas.Pos_serial + "','" + ptas.Pos_setbat;
-                                        str_mysql = str_mysql + "','" + ptas.Hostserial + "','" + ptas.Authcode + "','" + ptas.Transtime + "','" + ptas.Check_value + "','" + ptas.Cardnum + "','" + ptas.Cardpass + "')";
+                                        str_mysql = str_mysql + "','" + ptas.Hostserial + "','" + ptas.Authcode + "','" + ptas.Transtime + "','" + ptas.Check_value + "','" + ptas.Cardnum + "','" + ptas.Cardpass + "','" + ptas.Posid + "')";
 
                                         int int_result = MySqlHelper.MySqlHelper.ExecuteSql(str_mysql, LinkString);
                                         //增加手机号码识别,只能积分
