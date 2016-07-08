@@ -449,7 +449,6 @@ namespace WebService
                                         str_mysql = str_mysql + "','" + pwas.Hostserial + "','" + pwas.Authcode + "','" + pwas.Transtime + "','" + pwas.Check_value + "','" + pwas.Cardnum + "','" + pwas.Cardpass + "')";
 
                                         int int_result = MySqlHelper.MySqlHelper.ExecuteSql(str_mysql, LinkString);
-
                                         if (int_result > 0)
                                         {
                                             string sql;
